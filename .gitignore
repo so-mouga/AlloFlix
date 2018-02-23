@@ -1,0 +1,13 @@
+/.idea/.idea/
+nbproject/
+app/config/parameters.yml
+app/logs/*
+build
+
+
+.idea/
+.DS_Store
+!/docker/logs/
+docker/logs/*
+!/docker/logs/.gitkeep
+nbproject/
