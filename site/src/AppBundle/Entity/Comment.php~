@@ -142,28 +142,5 @@ class Comment
     {
         return $this->dateCreate;
     }
-
-    /**
-     * Set user
-     *
-     * @param \OC\PlatformBundle\Entity\Advert $user
-     *
-     * @return Comment
-     */
-    public function setUser(\OC\PlatformBundle\Entity\Advert $user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \OC\PlatformBundle\Entity\Advert
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
 }
+

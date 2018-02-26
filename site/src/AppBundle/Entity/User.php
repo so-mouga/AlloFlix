@@ -65,15 +65,15 @@ class User
 
     /**
      * collection film for user
-     * @var array
+     * @var array|null
      */
-    private $listHeartStroke;
+    private $listHeartStroke = null;
 
     /**
      * collection film watch laser for user
-     * @var array
+     * @var array|null
      */
-    private $listWatchLater;
+    private $listWatchLater = null;
 
     /**
      * Get id
