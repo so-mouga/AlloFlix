@@ -101,12 +101,14 @@ class Film
      */
     private $comments;
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
-        $this->createAt = new \DateTime('now');
+        $this->createAt = new \DateTime();
+        $this->categories = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
-    
 
     /*3*
      * Get id
@@ -308,13 +310,6 @@ class Film
     public function getSaga()
     {
         return $this->saga;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->categories = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
