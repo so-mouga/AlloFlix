@@ -12,6 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Comment
 {
+    
+
+    
+
     /**
      * @var int
      *
@@ -43,18 +47,17 @@ class Comment
     private $dateCreate;
 
     /**
-     * relation between Comment and Film
-     * @var string
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\film", inversedBy="comments")
      */
-    private $film = null;
-
+    private $film;
+    
     /**
-     * relation between Comment and User
-     * @var User
-     * @ORM\OneToOne(targetEntity="OC\PlatformBundle\Entity\Advert")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+
 
     public function __construct()
     {
@@ -165,5 +168,29 @@ class Comment
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set film
+     *
+     * @param \AppBundle\Entity\film $film
+     *
+     * @return Comment
+     */
+    public function setFilm(\AppBundle\Entity\film $film = null)
+    {
+        $this->film = $film;
+
+        return $this;
+    }
+
+    /**
+     * Get film
+     *
+     * @return \AppBundle\Entity\film
+     */
+    public function getFilm()
+    {
+        return $this->film;
     }
 }

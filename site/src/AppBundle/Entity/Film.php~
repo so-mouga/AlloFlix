@@ -94,6 +94,12 @@ class Film
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Actor" , mappedBy="films")
      */
     private $actors;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Comment", mappedBy="film")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $comments;
 
 
     /*3*
@@ -337,5 +343,141 @@ class Film
     public function getCategories()
     {
         return $this->categories;
+    }
+
+    /**
+     * Add producer
+     *
+     * @param \AppBundle\Entity\Producer $producer
+     *
+     * @return Film
+     */
+    public function addProducer(\AppBundle\Entity\Producer $producer)
+    {
+        $this->producers[] = $producer;
+
+        return $this;
+    }
+
+    /**
+     * Remove producer
+     *
+     * @param \AppBundle\Entity\Producer $producer
+     */
+    public function removeProducer(\AppBundle\Entity\Producer $producer)
+    {
+        $this->producers->removeElement($producer);
+    }
+
+    /**
+     * Get producers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProducers()
+    {
+        return $this->producers;
+    }
+
+    /**
+     * Add actor
+     *
+     * @param \AppBundle\Entity\Actor $actor
+     *
+     * @return Film
+     */
+    public function addActor(\AppBundle\Entity\Actor $actor)
+    {
+        $this->actors[] = $actor;
+
+        return $this;
+    }
+
+    /**
+     * Remove actor
+     *
+     * @param \AppBundle\Entity\Actor $actor
+     */
+    public function removeActor(\AppBundle\Entity\Actor $actor)
+    {
+        $this->actors->removeElement($actor);
+    }
+
+    /**
+     * Get actors
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getActors()
+    {
+        return $this->actors;
+    }
+
+    /**
+     * Add userListWatchLater
+     *
+     * @param \AppBundle\Entity\User $userListWatchLater
+     *
+     * @return Film
+     */
+    public function addUserListWatchLater(\AppBundle\Entity\User $userListWatchLater)
+    {
+        $this->userListWatchLater[] = $userListWatchLater;
+
+        return $this;
+    }
+
+    /**
+     * Remove userListWatchLater
+     *
+     * @param \AppBundle\Entity\User $userListWatchLater
+     */
+    public function removeUserListWatchLater(\AppBundle\Entity\User $userListWatchLater)
+    {
+        $this->userListWatchLater->removeElement($userListWatchLater);
+    }
+
+    /**
+     * Get userListWatchLater
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUserListWatchLater()
+    {
+        return $this->userListWatchLater;
+    }
+
+    /**
+     * Add comment
+     *
+     * @param \AppBundle\Entity\comment $comment
+     *
+     * @return Film
+     */
+    public function addComment(\AppBundle\Entity\comment $comment)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Remove comment
+     *
+     * @param \AppBundle\Entity\comment $comment
+     */
+    public function removeComment(\AppBundle\Entity\comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

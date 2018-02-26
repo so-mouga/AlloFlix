@@ -94,7 +94,19 @@ class Film
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Actor" , mappedBy="films")
      */
     private $actors;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Comment", mappedBy="film")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $comments;
 
+    public function __construct()
+    {
+        $this->createAt = new \DateTime('now');
+    }
+    
+    
 
     /*3*
      * Get id
@@ -405,5 +417,73 @@ class Film
     public function getActors()
     {
         return $this->actors;
+    }
+
+    /**
+     * Add userListWatchLater
+     *
+     * @param \AppBundle\Entity\User $userListWatchLater
+     *
+     * @return Film
+     */
+    public function addUserListWatchLater(\AppBundle\Entity\User $userListWatchLater)
+    {
+        $this->userListWatchLater[] = $userListWatchLater;
+
+        return $this;
+    }
+
+    /**
+     * Remove userListWatchLater
+     *
+     * @param \AppBundle\Entity\User $userListWatchLater
+     */
+    public function removeUserListWatchLater(\AppBundle\Entity\User $userListWatchLater)
+    {
+        $this->userListWatchLater->removeElement($userListWatchLater);
+    }
+
+    /**
+     * Get userListWatchLater
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUserListWatchLater()
+    {
+        return $this->userListWatchLater;
+    }
+
+    /**
+     * Add comment
+     *
+     * @param \AppBundle\Entity\comment $comment
+     *
+     * @return Film
+     */
+    public function addComment(\AppBundle\Entity\comment $comment)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Remove comment
+     *
+     * @param \AppBundle\Entity\comment $comment
+     */
+    public function removeComment(\AppBundle\Entity\comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }
