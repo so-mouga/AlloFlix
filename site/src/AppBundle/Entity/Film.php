@@ -309,13 +309,8 @@ class Film
     {
         return $this->saga;
     }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->categories = new \Doctrine\Common\Collections\ArrayCollection();
-    }
+    
+    
 
     /**
      * Add category
