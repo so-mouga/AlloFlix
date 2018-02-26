@@ -109,6 +109,8 @@ class Film
         $this->createAt = new \DateTime();
         $this->categories = new \Doctrine\Common\Collections\ArrayCollection();
     }
+    
+    
 
     /*3*
      * Get id
