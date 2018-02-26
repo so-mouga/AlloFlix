@@ -172,11 +172,11 @@ class Actor
     /**
      * Add film
      *
-     * @param \AppBundle\Entity\Films $film
+     * @param Film $film
      *
      * @return Actor
      */
-    public function addFilm(\AppBundle\Entity\Films $film)
+    public function addFilm(Film $film)
     {
         $this->films[] = $film;
 
@@ -186,9 +186,9 @@ class Actor
     /**
      * Remove film
      *
-     * @param \AppBundle\Entity\Films $film
+     * @param Film $film
      */
-    public function removeFilm(\AppBundle\Entity\Films $film)
+    public function removeFilm(Film $film)
     {
         $this->films->removeElement($film);
     }

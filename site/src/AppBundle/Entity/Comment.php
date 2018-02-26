@@ -12,10 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Comment
 {
-    
-
-    
-
     /**
      * @var int
      *
@@ -149,11 +145,11 @@ class Comment
     /**
      * Set user
      *
-     * @param \OC\PlatformBundle\Entity\Advert $user
+     * @param User $user
      *
      * @return Comment
      */
-    public function setUser(\OC\PlatformBundle\Entity\Advert $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
 
@@ -163,7 +159,7 @@ class Comment
     /**
      * Get user
      *
-     * @return \OC\PlatformBundle\Entity\Advert
+     * @return User
      */
     public function getUser()
     {
