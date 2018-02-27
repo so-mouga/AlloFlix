@@ -24,26 +24,11 @@ class SagaFixture extends Fixture
      */
     public function load(ObjectManager $manager)
     {
-        $dif = true;
         for ($i = 1; $i <= 2; $i++)
         {
             $sage = new Saga();
             $sage->setLabel("sage N°".$i);
 
-
-//            if ($dif == true)
-//            {
-//                for ($a = 1; $a <= 5; $a++)
-//                {
-//                    $sage->addFilm($this->getReference('Film N°'.$a));
-//                }
-//                $dif = false;
-//            }else{
-//                for ($a = 5; $a <= 10; $a++)
-//                {
-//                    $sage->addFilm($this->getReference('Film N°'.$a));
-//                }
-//            }
             $this->addReference('Saga N°'.$i, $sage);
             $manager->persist($sage);
         }

@@ -28,8 +28,7 @@ class ActorFixture extends Fixture implements DependentFixtureInterface
         for ($i = 1; $i <= 2; $i++)
         {
             $actor = new Actor();
-            $actor->setFirstName("Personnage N°".$i);
-            $actor->setLastName("Actor N°".$i);
+            $actor->setFullName("Personnage N°".$i);
             $actor->setDescription("lorem ipsum");
             $actor->setImage("#");
             if ($i == 1)

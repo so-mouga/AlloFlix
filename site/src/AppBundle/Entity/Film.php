@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Film
  *
+ * @property \DateTime createAt
  * @ORM\Table(name="film")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\FilmRepository")
  */
@@ -106,7 +107,7 @@ class Film
      */
     public function __construct()
     {
-        $this->createAt = new \DateTime();
+        $this->setCreatedAt( new \DateTime());
         $this->categories = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
@@ -247,13 +248,10 @@ class Film
      *
      * @param \DateTime $createdAt
      *
-     * @return Film
      */
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     /**

@@ -27,8 +27,7 @@ class ProducerFixture extends Fixture implements DependentFixtureInterface
         for ($i = 1; $i <= 2; $i++)
         {
             $producer = new Producer();
-            $producer->setFirstName("Personne N°".$i);
-            $producer->setLastName("Producer N°".$i);
+            $producer->setFullName("Personne N°".$i);
             $producer->setDescription("Lorem ipsum");
             if ($i == 1)
             {

@@ -33,6 +33,7 @@ class CommentFixture extends Fixture implements DependentFixtureInterface
                                         natus nobis optio sed tempore voluptatum. Accusantium?');
             $comment->setNote(6);
             $comment->setFilm($this->getReference("Film N°".$i));
+            $comment->setUser($this->getReference('User N°'.$i));
             $manager->persist($comment);
             $this->addReference('Comment N°'.$i, $comment);
         }
@@ -48,7 +49,8 @@ class CommentFixture extends Fixture implements DependentFixtureInterface
     function getDependencies()
     {
         return [
-            FilmFixture::class
+            FilmFixture::class,
+            UserFixture::class
         ];
     }
 }

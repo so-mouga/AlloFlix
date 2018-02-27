@@ -24,7 +24,7 @@ class Producer
     /**
      * @var string
      *
-     * @ORM\Column(name="firstName", type="string", length=255)
+     * @ORM\Column(name="fullName", type="string", length=255)
      */
     private $fullName;
 
