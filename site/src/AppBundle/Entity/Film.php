@@ -31,7 +31,7 @@ class Film
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="string", length=255)
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */
     private $description;
 
@@ -54,7 +54,7 @@ class Film
      *
      * @ORM\Column(name="isSelected", type="boolean")
      */
-    private $isSelected;
+    private $isSelected = false;
 
     /**
      * @var \DateTime
@@ -66,7 +66,7 @@ class Film
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="releaseAt", type="datetime")
+     * @ORM\Column(name="releaseAt", type="datetime", nullable=true)
      */
     private $releaseAt;
     

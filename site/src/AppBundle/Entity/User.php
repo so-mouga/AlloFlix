@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * User
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  */
-class User
+class User implements UserInterface
 {
     /**
      * @var int
@@ -22,16 +23,21 @@ class User
     private $id;
 
     /**
+     * @ORM\Column(name="roles", type="array")
+     */
+    private $roles = array();
+
+    /**
      * @var string
      *
-     * @ORM\Column(name="Pseudo", type="string", length=255)
+     * @ORM\Column(name="Pseudo", type="string", length=255, unique=true)
      */
     private $pseudo;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Email", type="string", length=255)
+     * @ORM\Column(name="Email", type="string", length=255, unique=true)
      */
     private $email;
 
@@ -52,27 +58,27 @@ class User
     /**
      * @var bool
      *
-     * @ORM\Column(name="isBanished", type="boolean")
+     * @ORM\Column(name="isBanished", type="boolean", nullable=true)
      */
-    private $isBanished;
+    private $isBanished = false;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="dateBanishment", type="datetime")
+     * @ORM\Column(name="dateBanishment", type="datetime", nullable=true)
      */
     private $dateBanishment;
 
     /**
      *
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Film" ,  cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Film", cascade={"persist"})
      * @ORM\JoinTable(name="listWatchLaterUser")
      */
     private $listFilmWatchLater;
 
     /**
      *
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Film" , cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Film", cascade={"persist"})
      * @ORM\JoinTable(name="listHeartStrokeUser")
      * 
      */
@@ -84,7 +90,15 @@ class User
      */
     private $comments;
 
-    
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->listFilmWatchLater = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->listFilmHeartStroke = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->createdAt = new \Datetime();
+    }
 
     /**
      * Get id
@@ -94,6 +108,22 @@ class User
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * @param mixed $roles
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
     }
 
     /**
@@ -239,22 +269,37 @@ class User
     {
         return $this->dateBanishment;
     }
-    /**
-     * Constructor
-     */
-    public function __construct()
+
+    public function eraseCredentials()
     {
-        $this->listFilmWatchLater = new \Doctrine\Common\Collections\ArrayCollection();
+        return;
     }
+
+    /**
+     * @return null|string
+     */
+    public function getSalt()
+    {
+        return null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->pseudo;
+    }
+
 
     /**
      * Add listFilmWatchLater
      *
-     * @param \AppBundle\Entity\Film $listFilmWatchLater
+     * @param Film $listFilmWatchLater
      *
      * @return User
      */
-    public function addListFilmWatchLater(\AppBundle\Entity\Film $listFilmWatchLater)
+    public function addListFilmWatchLater(Film $listFilmWatchLater)
     {
         $this->listFilmWatchLater[] = $listFilmWatchLater;
 
@@ -264,9 +309,9 @@ class User
     /**
      * Remove listFilmWatchLater
      *
-     * @param \AppBundle\Entity\Film $listFilmWatchLater
+     * @param Film $listFilmWatchLater
      */
-    public function removeListFilmWatchLater(\AppBundle\Entity\Film $listFilmWatchLater)
+    public function removeListFilmWatchLater(Film $listFilmWatchLater)
     {
         $this->listFilmWatchLater->removeElement($listFilmWatchLater);
     }
@@ -284,11 +329,11 @@ class User
     /**
      * Add listFilmHeartStroke
      *
-     * @param \AppBundle\Entity\Film $listFilmHeartStroke
+     * @param Film $listFilmHeartStroke
      *
      * @return User
      */
-    public function addListFilmHeartStroke(\AppBundle\Entity\Film $listFilmHeartStroke)
+    public function addListFilmHeartStroke(Film $listFilmHeartStroke)
     {
         $this->listFilmHeartStroke[] = $listFilmHeartStroke;
 
@@ -300,7 +345,7 @@ class User
      *
      * @param \AppBundle\Entity\Film $listFilmHeartStroke
      */
-    public function removeListFilmHeartStroke(\AppBundle\Entity\Film $listFilmHeartStroke)
+    public function removeListFilmHeartStroke(Film $listFilmHeartStroke)
     {
         $this->listFilmHeartStroke->removeElement($listFilmHeartStroke);
     }
@@ -318,11 +363,11 @@ class User
     /**
      * Add comment
      *
-     * @param \AppBundle\Entity\Comment $comment
+     * @param Comment $comment
      *
      * @return User
      */
-    public function addComment(\AppBundle\Entity\Comment $comment)
+    public function addComment(Comment $comment)
     {
         $this->comments[] = $comment;
 
@@ -332,9 +377,9 @@ class User
     /**
      * Remove comment
      *
-     * @param \AppBundle\Entity\Comment $comment
+     * @param Comment $comment
      */
-    public function removeComment(\AppBundle\Entity\Comment $comment)
+    public function removeComment(Comment $comment)
     {
         $this->comments->removeElement($comment);
     }
