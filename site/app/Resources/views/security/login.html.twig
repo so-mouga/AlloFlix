@@ -4,12 +4,30 @@
     {% if error %}
         <div>{{ error.messageKey }}</div>
     {% endif %}
-    <form action="{{ path('login') }}" method="post">
+    <form action="{{ path('login') }}" method="post" class="form-horizontal ">
         <label for="username">Email:</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}" />
+        <input type="text" id="username" name="_username" required value="{{ last_username }}" />
         <label for="password">Mot de passe:</label>
-        <input type="password" id="password" name="_password" />
+        <input type="password" id="password" required name="_password" />
         <button type="submit">login</button>
     </form>
+
+
+
+    {{ form_start(form, {'attr': {'class': 'form-horizontal', 'action': path('create')}} )}}
+        <div class="form-group">
+
+        </div>
+        {{ form_widget(form.pseudo) }}
+        {{ form_widget(form.email) }}
+        {{ form_widget(form.password) }}
+        {{ form_widget(form.create) }}
+
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+
+    {% for message in app.session.flashbag.get('info') %}
+        <p>Message flash : {{ message }}</p>
+    {% endfor %}
 
 {% endblock %}

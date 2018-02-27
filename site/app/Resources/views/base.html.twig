@@ -3,11 +3,20 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}
+            <script type="text/javascript" src="{{ "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" }}"></script>
+            <script type="text/javascript" src="{{ "http://ajax.microsoft.com/ajax/jquery.ui/1.8.10/jquery-ui.js" }}"></script>
+            <link rel="stylesheet" href="{{ asset('css/base.css') }}" />
+            <link rel="stylesheet" href="{{ asset('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css') }}" />
+        {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
+        {% include 'include/top_barre.html.twig' %}
+
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        {% block javascripts %}
+        {% endblock %}
+
     </body>
 </html>
