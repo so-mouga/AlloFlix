@@ -8,8 +8,11 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Actor;
+use AppBundle\Form\ActorType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class AdminController extends Controller
 {
@@ -41,5 +44,27 @@ class AdminController extends Controller
     public function adminCategoriesAction()
     {
         return $this->render('admin/admin_categories.html.twig');
+    }
+
+    /**
+     * @Route("/admin/actor", name="create_actor")
+     */
+    public function createActorAction(Request $request)
+    {
+        $actor = new Actor();
+        $form = $this->createForm(ActorType::class, $actor);
+
+        if($request->isMethod('POST') && $form->handleRequest($request)->isValid())
+        {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($actor);
+            $em->flush();
+
+            $request->getSession()->getFlashBag()->add('info', 'well recorded actor.');
+        }
+
+        return $this->render('admin/admin_actor.html.twig', array(
+            'form' => $form->createView(),
+        ));
     }
 }
