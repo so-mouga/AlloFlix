@@ -50,10 +50,10 @@ class ActorManager
     {
         $nameActors = explode("," , $actorsName);
         $listActor = [];
+        $i = 0;
         
         foreach($nameActors as $nameActor)
         {
-            $i = 0;
             $actor = $this->actorRepository->findOneByFullName($nameActor);
             
             if(empty($actor))

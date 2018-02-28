@@ -23,10 +23,10 @@ class CategoryManager
         
         $nameCategories = explode("," , $categoriesName);
         $listCategory = [];
+        $i = 0;
         
         foreach($nameCategories as $nameCategory)
         {
-            $i = 0;
             $category = $this->categoryRepository->findOneByLabel($nameCategory);
             
             if(empty($category))
