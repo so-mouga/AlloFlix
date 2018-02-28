@@ -1,15 +1,17 @@
-<div>
-    <a href="{{ path('index')}}">AlloFlix</a>
-    <a href="{{ path('index')}}">Acceuil</a>
-    <a href="{{ path('films', {'idPage': 1}) }}">Films</a>
-    <a href="{{ path('film_heart')}}">Mes coups de coeur</a>
-    <a href="{{ path('film_later')}}">à regarder plus tard</a>
-    <div>
-        <input type="text" id="find_film">
-        <input type="submit">
-    </div>
+<h1><a href="{{ path('index')}}">AlloFlix</a></h1>
+<a href="{{ path('index')}}">Acceuil</a>
+<a href="{{ path('films', {'idPage': 1}) }}">Films</a>
+<a href="{{ path('film_heart')}}">Mes coups de coeur</a>
+<a href="{{ path('film_later')}}">à regarder plus tard</a>
+<input type="text" id="find_film">
+<input type="submit" class="btn-search">
+
+{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+    <a href="{{ path('preference') }}">Mon compte</a>
+    <a href="{{ path('logout') }}">Déconnexion</a>
+{% else %}
     <a href="{{ path('login')}}">connexion</a>
-</div>
+{% endif %}
 
 {% block javascripts %}
     <script src="{{ asset('js/top_barre.js') }}" type="text/javascript"></script>

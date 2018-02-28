@@ -1,27 +1,32 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h2> liste de films </h2>
-    <ul>
-        {% for film in listFilms %}
-            <li>
-                <a href="{{ path('film', {'filmID': film.id}) }}">
-                    {{ film.name }}
-                </a>
-                Description {{ film.description }},
-                le {{ film.createdAt|date('d/m/Y') }}
-            </li>
-        {% else %}
-            <li>Pas (encore !) d'annonces</li>
-        {% endfor %}
-    </ul>
-    <ul class="pagination">
-        {# On utilise la fonction range(a, b) qui crée un tableau de valeurs entre a et b #}
-        {% for p in range(1, nbPages) %}
-            <li{% if p == page %} class="active"{% endif %}>
-                <a href="{{ path('films', {'idPage': p}) }}">{{ p }}</a>
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="list-film">
+        
+        <h2> liste de films </h2>
+        <ul>
+            {% for film in listFilms %}
+                <li>
+                    <a href="{{ path('film', {'filmID': film.id}) }}">
+                        {{ film.name }}
+                    </a>
+                    Description {{ film.description }},
+                    le {{ film.createdAt|date('d/m/Y') }}
+                </li>
+            {% else %}
+                <li>Pas (encore !) d'annonces</li>
+            {% endfor %}
+        </ul>
+
+        <ul class="pagination">
+            {# On utilise la fonction range(a, b) qui crée un tableau de valeurs entre a et b #}
+            {% for p in range(1, nbPages) %}
+                <li{% if p == page %} class="active"{% endif %}>
+                    <a href="{{ path('films', {'idPage': p}) }}">{{ p }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
 {% endblock %}
 

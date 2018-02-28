@@ -7,14 +7,33 @@
             <script type="text/javascript" src="{{ "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" }}"></script>
             <script type="text/javascript" src="{{ "http://ajax.microsoft.com/ajax/jquery.ui/1.8.10/jquery-ui.js" }}"></script>
             <link rel="stylesheet" href="{{ asset('css/base.css') }}" />
+{#
             <link rel="stylesheet" href="{{ asset('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css') }}" />
+#}
         {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
-        {% include 'include/top_barre.html.twig' %}
+        <div class="top_barre">
+            {% include 'include/top_barre.html.twig' %}
+        </div>
 
-        {% block body %}{% endblock %}
+        {% if app.request.get('_route') == 'index'%}
+        <div class="title-site">
+            <h1>Bienvenue chez nous</h1>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet
+                ipsum in ex condimentum consequat non at erat. Donec imperdiet nibh mauris.
+                Praesent laoreet placerat est posuere auctor. Vivamus finibus augue ut congue
+                olutpat. Duis quis mollis nisi, et placerat ex. Vivamus a dignissim leo. Pellentesque
+            </p>
+        </div>
+        {% endif %}
+
+
+        <div class="body">
+            {% block body %}{% endblock %}
+        </div>
         {% block javascripts %}
         {% endblock %}
 
