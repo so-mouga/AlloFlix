@@ -31,11 +31,25 @@ class FilmManager
 
     /**
      *
+     * @param $page
+     * @param $nbPerPage
      * @return array
      */
-    public function getAllFilms() {
-        return $this->em->getRepository(Film::class)
-            ->findAll();
+    public function getAllFilms(int $page,int $nbPerPage)
+    {
+        if ($page < 1) {
+            throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+        }
+        $listFilm = $this->em->getRepository(Film::class)
+            ->getAllFilm($page, $nbPerPage);
+
+        $nbPages = ceil(count($listFilm) / $nbPerPage);
+
+        if ($page > $nbPages) {
+            throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+        }
+
+        return [$listFilm, $nbPages];
     }
 
     /**
