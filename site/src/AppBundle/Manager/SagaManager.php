@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Manager;
 
@@ -20,10 +20,7 @@ class SagaManager
     
     public function findSagaByLabel($nameSaga)
     {
-        
-        
             $saga = $this->sagaRepository->findOneByLabel($nameSaga);
-            
             if(empty($saga))
             {
                 $newSaga = new Saga();
@@ -32,19 +29,41 @@ class SagaManager
                 $this->em->flush();
                 
                 return $newSaga;
-                
             }
             else 
             {
                 return $saga;
             }
-            
-            
-            
     }
-    
-    
+
+    /**
+     * @return array
+     */
+    public function getAllSaga() : array {
+        return $this->em->getRepository(Saga::class)
+            ->findAll();
+    }
+
+    /**
+     * @param int $id
+     * @return Saga
+     */
+    public function getSagaById(int $id) : ?Saga{
+        return $this->em->getRepository(Saga::class)
+            ->findOneById($id);
+    }
+
+
+    /**
+     * @param string $label
+     * @return bool
+     */
+    public function addSaga(string $label) : bool{
+        $saga = new Saga();
+        $saga->setLabel($label);
+
+        $this->em->persist($saga);
+        $this->em->flush();
+        return true;
+    }
 }
-
-
-?>

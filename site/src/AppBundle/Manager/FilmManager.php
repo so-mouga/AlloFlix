@@ -76,10 +76,6 @@ class FilmManager
             $this->em->flush();
             
         }
-       
-       
-        
-        
     }
     /**
      *
@@ -108,7 +104,7 @@ class FilmManager
      * @param int $id
      * @return Film
      */
-    public function getFilmById(int $id) : Film{
+    public function getFilmById(int $id) : ?Film{
         return $this->em->getRepository(Film::class)
             ->findOneById($id);
     }
