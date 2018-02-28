@@ -1,9 +1,51 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
 {% block body %}
-    {% for message in app.session.flashbag.get('info') %}
-        <p>Message flash : {{ message }}</p>
-    {% endfor %}
-    <p> admin categories </p>
-    {{ form(form) }}
+    <div>
+        {% for message in app.session.flashbag.get('info') %}
+            <p>Message flash : {{ message }}</p>
+        {% endfor %}
+        <p> admin categories </p>
+        {{ form(form) }}
+    </div>
+    <div>
+        <h2>HTML Table</h2>
+
+        <table>
+            <tr>
+                <th>Full Name</th>
+                <th>Description</th>
+                <th>image</th>
+                <th>Edit</th>
+                <th>Drop</th>
+            </tr>
+            {# faire la boucle for listActor #}
+            {% for actor in listActor %}
+            <tr>
+                <td id="fullname_{{ actor.id }}">{{ actor.fullName }}</td>
+                <td id="desc_{{ actor.id }}">{{ actor.description }}</td>
+                <td id="image_{{ actor.id }}">{{ actor.image }}</td>
+                <td id="edit_{{ actor.id }}"><button id="{{ actor.id }}" class="btn-primary edit">Edit</button></td>
+                <td id="drop_{{ actor.id }}"><a href="{{ path('delete_actor', {'id_delete': actor.id}) }}"><button class="btn-danger">Drop</button></a></td>
+            </tr>
+            {% else %}
+                <p>Pas (encore !) d'actor</p>
+            {% endfor %}
+        </table>
+
+    </div>
+    <script>
+        $(document).ready(function(){
+            $(".edit").click(function(){
+                var id = $(this).attr('id');
+                var fullname = $("#fullname_"+id).text();
+                var desc = $("#desc_"+id).text();
+                var img = $("#image_"+id).text();
+                $('#appbundle_actor_fullName').val(fullname);
+                $('#appbundle_actor_description').val(desc);
+                $('#appbundle_actor_image').val(img);
+                $('#appbundle_actor_id').val(id);
+            });
+        });
+    </script>
 {% endblock %}

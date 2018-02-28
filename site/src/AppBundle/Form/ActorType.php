@@ -2,7 +2,10 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Film;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -20,6 +23,9 @@ class ActorType extends AbstractType
             ->add('fullName', TextType::class)
             ->add('description',TextareaType::class)
             ->add('image', TextType::class)
+            ->add('id', HiddenType::class, [
+                'mapped' => false
+            ])
             ->add('Save', SubmitType::class);
     }/**
      * {@inheritdoc}

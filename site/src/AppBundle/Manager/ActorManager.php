@@ -123,6 +123,27 @@ class ActorManager
         $this->em->flush();
         return true;
     }
+
+    public function editActor(array $data)
+    {
+        $actor = $this->getActorById($data['id']);
+        $actor->setFullName($data['fullName']);
+        $actor->setDescription($data['description']);
+        $actor->setImage($data['image']);
+    }
+
+    public function deleteActor(int $id)
+    {
+        $actor = $this->getActorById($id);
+
+        if (null === $actor) {
+            throw new NotFoundHttpException("L'actor d'id ".$id." n'existe pas.");
+        }
+
+
+        $this->em->remove($actor);
+        $this->em->flush();
+    }
 }
 
 
