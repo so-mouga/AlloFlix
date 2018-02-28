@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Manager;
 
@@ -37,12 +37,10 @@ class CategoryManager
                 $this->em->flush();
                 
                 $listCategory[$i] = $newCategory;
-                
             }
             else
             {
                 $listCategory[$i] = $category;
-                
             }
             
             $i++;
@@ -55,9 +53,34 @@ class CategoryManager
         
         
     }
-    
-    
+
+    /**
+     * @return array
+     */
+    public function getAllCategories() : array {
+        return $this->em->getRepository(Category::class)
+            ->findAll();
+    }
+
+    /**
+     * @param int $id
+     * @return Category
+     */
+    public function getCategoryById(int $id) : ?Category{
+        return $this->em->getRepository(Category::class)
+            ->findOneById($id);
+    }
+    /**
+     * @param string $label
+     * @return bool
+     */
+    public function addCategory(string $label) : bool{
+        $category = new Category();
+        $category->setLabel($label);
+
+        $this->em->persist($category);
+        $this->em->flush();
+        return true;
+    }
 }
 
-
-?>
