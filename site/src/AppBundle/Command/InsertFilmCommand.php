@@ -41,8 +41,7 @@ class InsertFilmCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('ImportCSV')
-        ->setDescription('Injection film , actor , productor'); 
-
+        ->setDescription('Injection film , actor , productor');
     }
     
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -55,73 +54,41 @@ class InsertFilmCommand extends ContainerAwareCommand
         
         if (($handle = fopen($pathActor, "r")) !== false) {
             $cpt = 0;
-            
             while (($data = fgetcsv($handle, 0, ";")) !== false) {
                 //echo $data[0];
-                
-                
                 if($cpt != 0)
                 {
                     
                     $fullName = $data[0];
                     $description = $data[1];
                     $image = $data[2];
-                    
-                    
-                    $actor = $this->actorManager->addActor($fullName, $description , $image);
-                    
-                    
+                    $actor = $this->actorManager->importActor($fullName, $description , $image);
                 }
-                
                 $cpt ++;
             }
         }
-        
-        
         echo "Actor Import !";
-        
-        
-        
         if (($handle = fopen($pathProducer, "r")) !== false) {
             $cpt = 0;
             
             while (($data = fgetcsv($handle, 0, ";")) !== false) {
-                
-                
-                
                 if($cpt != 0)
                 {
-                    
                     $fullName = $data[0];
                     $description = $data[1];
                     $image = $data[2];
-                    
-                    
-                    $productor = $this->producerManager->addProducer($fullName , $description , $image);
-                    
-                    
+                    $productor = $this->producerManager->importProducer($fullName , $description , $image);
                 }
                 
                 $cpt ++;
             }
         }
-        
         echo "Producer Import !";
-        
-        
-        
-        
         if (($handle = fopen($pathFilm, "r")) !== false) {
             $cpt = 0;
-             
             while (($data = fgetcsv($handle, 0, ";")) !== false) {
-                
-                
-                
                 if($cpt != 0)
                 {
-                 
-                    
                     $name = $data[0];
                     $description = $data[1];                  
                     $link = $data[2];
@@ -131,20 +98,14 @@ class InsertFilmCommand extends ContainerAwareCommand
                     $producersName = $data[6];
                     $categoriesName = $data[7];
                     $nameSaga = $data[8];
-                    
-                    
-                    
-                    $actors = $this->actorManager->findActorByName($actorsName);
+                    $actors = $this->actorManager->importActorByName($actorsName);
                     $producers = $this->producerManager->findProducerByName($producersName);
                     $categories = $this->categoryManager->findCategoriesByLabel($categoriesName);
                     $saga = $this->sagaManager->findSagaByLabel($nameSaga);
-                    
 //                     $releaseAt = new DateTime();
                     $this->filmManager->importFilm($name , $description , $link , $image , $releaseAt , $saga , $actors , $producers , $categories);
-                    
-                    
+
                 }
-                
                 $cpt ++;
             }
         }
