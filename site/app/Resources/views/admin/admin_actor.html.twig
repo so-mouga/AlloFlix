@@ -1,9 +1,37 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
 {% block body %}
-    {% for message in app.session.flashbag.get('info') %}
-        <p>Message flash : {{ message }}</p>
-    {% endfor %}
-    <p> admin categories </p>
-    {{ form(form) }}
+    <div>
+        {% for message in app.session.flashbag.get('info') %}
+            <p>Message flash : {{ message }}</p>
+        {% endfor %}
+        <p> admin categories </p>
+        {{ form(form) }}
+    </div>
+    <div>
+        <h2>HTML Table</h2>
+
+        <table>
+            <tr>
+                <th>Full Name</th>
+                <th>Description</th>
+                <th>image</th>
+                <th>Edit</th>
+                <th>Drop</th>
+            </tr>
+            {# faire la boucle for listActor #}
+            {% for actor in listActor %}
+            <tr>
+                <td id="fullname_{{ actor.id }}">{{ actor.fullName }}</td>
+                <td id="desc_{{ actor.id }}">{{ actor.description }}</td>
+                <td id="image_{{ actor.id }}">{{ actor.image }}</td>
+                <td id="edit_{{ actor.id }}"><button class="btn-primary edit">Edit</button></td>
+                <td id="drop_{{ actor.id }}"><button class="btn-danger">Drop</button></td>
+            </tr>
+            {% else %}
+                <p>Pas (encore !) d'actor</p>
+            {% endfor %}
+        </table>
+
+    </div>
 {% endblock %}
