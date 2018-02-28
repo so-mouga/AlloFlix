@@ -8,22 +8,49 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Film;
+use AppBundle\Form\FilmType;
+use Doctrine\ORM\EntityManagerInterface;
 use AppBundle\Entity\Actor;
 use AppBundle\Form\ActorType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 
 class AdminController extends Controller
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @Route("/admin/films", name="admin_films")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function adminFilmsAction()
+    public function adminFilmsAction(Request $request)
     {
-        return $this->render('admin/admin_films.html.twig');
+        $film = new Film();
+        $form = $this->createForm(FilmType::class);
+
+        if ($request->isMethod('POST') AND  $form->handleRequest($request)->isValid()){
+            dump($form->getData());
+            exit;
+            $this->entityManager->persist($film);
+            $this->entityManager->flush();
+
+            $request->getSession()->getFlashBag()
+                ->add('info', 'Le film à bien été ajouté.');
+        }
+
+        return $this->render('admin/admin_films.html.twig',[
+            'form'  =>  $form->createView(),
+        ]);
     }
 
     /**
