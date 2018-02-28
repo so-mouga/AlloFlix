@@ -11,10 +11,9 @@ namespace AppBundle\DataFixtures;
 
 use AppBundle\Entity\Producer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class ProducerFixture extends Fixture implements DependentFixtureInterface
+class ProducerFixture extends Fixture
 {
 
     /**
@@ -29,19 +28,7 @@ class ProducerFixture extends Fixture implements DependentFixtureInterface
             $producer = new Producer();
             $producer->setFullName("Personne N°".$i);
             $producer->setDescription("Lorem ipsum");
-            if ($i == 1)
-            {
-                for ($a = 1; $a <= 5; $a++)
-                {
-                    $producer->addFilm($this->getReference("Film N°".$a));
-                }
-            }
-            else{
-                for ($a = 6; $a <= 10; $a++)
-                {
-                    $producer->addFilm($this->getReference("Film N°".$a));
-                }
-            }
+
             $producer->setImage("#");
             $manager->persist($producer);
             $this->addReference('Producer N°'.$i, $producer);
@@ -49,16 +36,4 @@ class ProducerFixture extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    /**
-     * This method must return an array of fixtures classes
-     * on which the implementing class depends on
-     *
-     * @return array
-     */
-    function getDependencies()
-    {
-        return [
-            FilmFixture::class
-        ];
-    }
 }

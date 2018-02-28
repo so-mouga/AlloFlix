@@ -11,11 +11,9 @@ namespace AppBundle\DataFixtures;
 
 use AppBundle\Entity\Actor;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class ActorFixture extends Fixture implements DependentFixtureInterface
+class ActorFixture extends Fixture
 {
 
     /**
@@ -31,19 +29,7 @@ class ActorFixture extends Fixture implements DependentFixtureInterface
             $actor->setFullName("Personnage N°".$i);
             $actor->setDescription("lorem ipsum");
             $actor->setImage("#");
-            if ($i == 1)
-            {
-                for ($a = 1; $a <= 5; $a++)
-                {
-                    $actor->addFilm($this->getReference("Film N°".$a));
-                }
-            }
-            else{
-                for ($a = 6; $a <= 10; $a++)
-                {
-                    $actor->addFilm($this->getReference("Film N°".$a));
-                }
-            }
+            $this->addReference("Actor N°".$i, $actor);
 
 
             $manager->persist($actor);
@@ -51,16 +37,4 @@ class ActorFixture extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    /**
-     * This method must return an array of fixtures classes
-     * on which the implementing class depends on
-     *
-     * @return array
-     */
-    function getDependencies()
-    {
-        return [
-            FilmFixture::class
-        ];
-    }
 }

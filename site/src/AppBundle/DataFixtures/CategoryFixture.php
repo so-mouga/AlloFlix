@@ -11,10 +11,9 @@ namespace AppBundle\DataFixtures;
 
 use AppBundle\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class CategoryFixture extends Fixture implements DependentFixtureInterface
+class CategoryFixture extends Fixture
 {
 
     /**
@@ -29,41 +28,11 @@ class CategoryFixture extends Fixture implements DependentFixtureInterface
         {
             $category = new Category();
             $category->setLabel($tab[$i]);
-            if ($i == 0)
-            {
-                for ($a = 1; $a <= 4; $a++)
-                {
-                    $category->addFilm($this->getReference('Film N°'.$a));
-                }
-            }elseif ($i == 1)
-            {
-                for ($a = 5; $a <= 7; $a++)
-                {
-                    $category->addFilm($this->getReference('Film N°'.$a));
-                }
-            }else
-            {
-                for ($a = 8; $a <= 10; $a++)
-                {
-                    $category->addFilm($this->getReference('Film N°'.$a));
-                }
-            }
+
             $manager->persist($category);
             $this->addReference('Category N°'.$i, $category);
         }
         $manager->flush();
     }
 
-    /**
-     * This method must return an array of fixtures classes
-     * on which the implementing class depends on
-     *
-     * @return array
-     */
-    function getDependencies()
-    {
-        return [
-            FilmFixture::class
-        ];
-    }
 }
