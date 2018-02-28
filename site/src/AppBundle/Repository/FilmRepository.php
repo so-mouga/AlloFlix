@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * FilmRepository
@@ -10,4 +11,13 @@ namespace AppBundle\Repository;
  */
 class FilmRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getAllFilm(int $page,int $nbPerPage)
+    {
+        $query = $this->createQueryBuilder('f')->getQuery();
+
+        $query->setFirstResult(($page-1) * $nbPerPage)
+        ->setMaxResults($nbPerPage);
+
+        return new Paginator($query, true);
+    }
 }

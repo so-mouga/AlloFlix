@@ -8,19 +8,34 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Manager\FilmManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class FilmController extends Controller
 {
+    private $manager;
+
+    public function __construct(FilmManager $manager)
+    {
+        $this->manager = $manager;
+    }
+
     /**
-     * @Route("/films", name="films")
+     * @Route("/films/{idPage}", name="films")
      *
+     * @param $idPage
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function filmsAction()
+    public function filmsAction(int $idPage)
     {
-        return $this->render('film/list_films.html.twig');
+        $nbPerPage = 3;
+        $data = $this->manager->getAllFilms($idPage, $nbPerPage);
+        return $this->render('film/list_films.html.twig', [
+            'listFilms' => $data[0],
+            'nbPages' => $data[1],
+            'page' => $idPage,
+        ]);
     }
 
     /**
