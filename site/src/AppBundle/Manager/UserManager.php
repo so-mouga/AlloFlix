@@ -10,6 +10,7 @@ namespace AppBundle\Manager;
 
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserManager
 {
@@ -19,9 +20,15 @@ class UserManager
      */
     private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    /**
+     * @var UserPasswordEncoderInterface
+     */
+    private $encoder;
+
+    public function __construct(EntityManagerInterface $entityManager ,UserPasswordEncoderInterface $encoder)
     {
         $this->entityManager = $entityManager;
+        $this->encoder = $encoder;
     }
 
     /**
@@ -60,4 +67,20 @@ class UserManager
         return $query;
     }
 
+    /**
+     * @param string $pseudo
+     * @param string $email
+     * @param string $password
+     */
+    public function setUserAdmin(string $pseudo, string $email, string $password)
+    {
+        $user = new User();
+        $password = $this->encoder->encodePassword($user, $password);
+        $user->setPseudo($pseudo)
+            ->setEmail($email)
+            ->setPassword($password)
+            ->setRoles(['ROLE_ADMIN']);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+    }
 }
