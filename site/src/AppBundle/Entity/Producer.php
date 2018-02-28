@@ -44,7 +44,7 @@ class Producer
     
     /**
      *
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Film" , inversedBy="producers")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Film" , mappedBy="producers")
      */
     private $films;
 

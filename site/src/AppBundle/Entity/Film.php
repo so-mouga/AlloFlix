@@ -79,20 +79,20 @@ class Film
     
     /**
      *
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Category" , mappedBy="films")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Category" , inversedBy="films")
      */
     private $categories;
     
     
     /**
      *
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Producer" , mappedBy="films")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Producer" , inversedBy="films")
      */
     private $producers;
     
     /**
      *
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Actor" , mappedBy="films")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Actor" , inversedBy="films")
      */
     private $actors;
     

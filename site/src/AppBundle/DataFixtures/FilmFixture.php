@@ -31,7 +31,32 @@ class FilmFixture extends Fixture implements DependentFixtureInterface
             $film->setDescription('lorem ipsum film N°'.$i);
             $film->setImage('http://thebabuzz.com/wp-content/uploads/2017/09/spider-man-homecoming-banner.jpg');
             $film->setIsSelected(false);
+
+            $film->setLink("#");
+            for ($a = 1; $a <= 2; $a++)
+            {
+                $film->addActor($this->getReference('Actor N°'.$a));
+            }
+            if ($i <= 4)
+            {
+                $film->addCategory($this->getReference('Category N°0'));
+            }elseif ($i <= 7)
+            {
+               $film->addCategory($this->getReference('Category N°1'));
+            }else
+            {
+                $film->addCategory($this->getReference('Category N°2'));
+            }
+
+            if($i < 5)
+            {
+                $film->addProducer($this->getReference("Producer N°1"));
+            }else{
+                $film->addProducer($this->getReference("Producer N°2"));
+            }
+
             $film->setLink("https://www.youtube.com/embed/mJQ4u-kXoGc");
+
 
             if($i < 5)
             {
@@ -55,7 +80,10 @@ class FilmFixture extends Fixture implements DependentFixtureInterface
     function getDependencies()
     {
         return [
-            SagaFixture::class
+            ProducerFixture::class,
+            CategoryFixture::class,
+            SagaFixture::class,
+            ActorFixture::class
         ];
     }
 }

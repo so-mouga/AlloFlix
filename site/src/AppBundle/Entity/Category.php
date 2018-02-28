@@ -30,7 +30,7 @@ class Category
     
     /**
      *
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Film" , inversedBy="categories")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Film" , mappedBy="categories")
      */
     private $films;
 

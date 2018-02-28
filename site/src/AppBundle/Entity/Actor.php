@@ -45,7 +45,7 @@ class Actor
     
     /**
      *
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Film" , inversedBy="actors")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Film" , mappedBy="actors")
      */
     private $films;
 
