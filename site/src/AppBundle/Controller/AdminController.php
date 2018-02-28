@@ -15,6 +15,7 @@ use AppBundle\Entity\Actor;
 use AppBundle\Form\ActorType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class AdminController extends Controller
 {
