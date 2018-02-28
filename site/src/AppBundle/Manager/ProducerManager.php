@@ -37,9 +37,10 @@ class ProducerManager
     {
         $nameProducers = explode("," , $producersName);
         $listProducer = [];
+        $i = 0;
+        
         foreach($nameProducers as $nameProducer)
         {
-            $i = 0;
             $producer = $this->producerRepository->findOneByFullName($nameProducer);
             
             if(empty($producer))
