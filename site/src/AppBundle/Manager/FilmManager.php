@@ -23,12 +23,64 @@ use Doctrine\ORM\EntityManagerInterface;
 class FilmManager
 {
     private $em;
-
+    private $filmRepository; 
+    
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->em = $entityManager;
+        $this->filmRepository = $entityManager->getRepository(Film::class);
     }
+    
+    public function importFilm($name , $description , $link , $image , $releaseAt , $saga , $actors , $producers , $categories)
+    {
+                
+        $film = $this->filmRepository->findOneByName($name);
+        
+        if(empty($film))
+        {
+         
+//             $serializer = new Serializer(array(new DateTimeNormalizer()));
+            
+//             $dateAsString = $serializer->normalize(new \DateTime());
+//             $dateRelease = new DateTime();
+//             //$dateRelease = $date->format('d-m-Y');
+// //             dump($dateRelease);
+// //             die();
 
+            $dateNow = new DateTime();
+
+            $newFilm = new Film();
+            $newFilm->setName($name);
+            $newFilm->setDescription($description);
+            $newFilm->setLink($link);
+            $newFilm->setImage($image);
+            //$newFilm->setReleaseAt($releaseAt);
+            $newFilm->setSaga($saga);
+            
+            foreach($actors as $actor)
+            {
+                $newFilm->addActor($actor);
+            }
+            
+            foreach($producers as $producer)
+            {
+                $newFilm->addProducer($producer);
+            }
+            
+            foreach($categories as $category)
+            {
+                $newFilm->addCategory($category);
+            }
+            
+            $this->em->persist($newFilm);
+            $this->em->flush();
+            
+        }
+       
+       
+        
+        
+    }
     /**
      *
      * @return array
