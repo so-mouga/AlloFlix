@@ -140,7 +140,7 @@ class InsertFilmCommand extends ContainerAwareCommand
                     $saga = $this->sagaManager->findSagaByLabel($nameSaga);
                     
 //                     $releaseAt = new DateTime();
-                    $this->filmManager->addFilm($name , $description , $link , $image , $releaseAt , $saga , $actors , $producers , $categories);
+                    $this->filmManager->importFilm($name , $description , $link , $image , $releaseAt , $saga , $actors , $producers , $categories);
                     
                     
                 }
