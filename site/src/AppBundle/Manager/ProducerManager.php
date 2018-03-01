@@ -4,6 +4,7 @@ namespace AppBundle\Manager;
 
 use AppBundle\Entity\Producer;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class ProducerManager
 {
@@ -102,6 +103,38 @@ class ProducerManager
         $this->em->persist($producer);
         $this->em->flush();
         return true;
+    }
+
+    public function createProducer(Request $request, Producer $producer)
+    {
+        if (null != $request->request->get('appbundle_producer')['id'])
+        {
+            $data = $request->request->get('appbundle_producer');
+            $producer = $this->getProducerById($data['id']);
+            $producer->setFullName($data['fullName']);
+            $producer->setDescription($data['description']);
+            $producer->setImage($data['image']);
+            $request->getSession()->getFlashBag()->add('info', 'well edited actor.');
+        }else {
+            $this->em->persist($producer);
+            $request->getSession()->getFlashBag()->add('info', 'well recorded actor.');
+        }
+        $this->em->flush();
+    }
+
+
+    /**
+     * @param int $id
+     */
+    public function deleteProducer(int $id)
+    {
+        $actor = $this->getProducerById($id);
+
+        if (null === $actor) {
+            throw new NotFoundHttpException("Le Producer d'id ".$id." n'existe pas.");
+        }
+        $this->em->remove($actor);
+        $this->em->flush();
     }
     
 }
