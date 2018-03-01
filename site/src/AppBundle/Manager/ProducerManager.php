@@ -105,6 +105,10 @@ class ProducerManager
         return true;
     }
 
+    /**
+     * @param Request $request
+     * @param Producer $producer
+     */
     public function createProducer(Request $request, Producer $producer)
     {
         if (null != $request->request->get('appbundle_producer')['id'])
