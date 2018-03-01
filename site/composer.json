@@ -48,8 +48,12 @@
         ]
     },
     "config": {
+		"process-timeout":      600,
+        "preferred-install":    "dist",
+        "github-protocols":     ["https"] ,
         "platform": {
             "php": "5.5.9"
+			
         },
         "sort-packages": true
     },

@@ -9,13 +9,18 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Film;
+use AppBundle\Entity\User;
 use AppBundle\Form\FilmType;
 use AppBundle\Manager\ActorManager;
 use AppBundle\Entity\Actor;
 use AppBundle\Form\ActorType;
+use AppBundle\Manager\FilmManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Manager\UserManager;
+use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Form\UserType;
 
 class AdminController extends Controller
 {
@@ -60,11 +65,51 @@ class AdminController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function adminUsersAction()
+    public function adminUsersAction(Request $request , UserManager $userManager)
     {
-        return $this->render('admin/admin_users.html.twig');
+        $listUsersBanned = $userManager->getUsersBanned();
+        $listUsers = $userManager->getAllUsersNotBanned();
+        
+        $user = new User();
+        $form = $this->createForm(UserType::class , $user);
+        $form->handleRequest($request);
+       
+        
+        if($form->isValid())
+        {
+            $userManager->addUser($user);
+        }
+        
+        return $this->render('admin/admin_users.html.twig' , array("form" => $form->createView() , "listUsersBanned" => $listUsersBanned , "listUsers" => $listUsers));
     }
 
+    /**
+     * @Route("/admin/unban/{idUser}", name="unban")
+     *
+     */
+    public function adminUnbanAction(UserManager $userManager , $idUser)
+    {
+        $user = $userManager->getUserById($idUser);
+        $userManager->unBanUser($user);
+//         return new Response("Débannir !");
+        return $this->redirectToRoute('admin_users');
+//         return $this->render('admin/admin_categories.html.twig');
+    }
+    
+    /**
+     * @Route("/admin/ban/{idUser}", name="ban")
+     *
+     */
+    public function adminBanAction(UserManager $userManager , $idUser)
+    {
+        
+        $user = $userManager->getUserById($idUser);
+        $userManager->banUser($user);
+//         return new Response("Bannir !");
+        return $this->redirectToRoute('admin_users');
+      
+    }
+    
     /**
      * @Route("/admin/categories", name="admin_categories")
      *

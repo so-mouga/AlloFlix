@@ -19,6 +19,7 @@ class UserManager
      * @var EntityManagerInterface
      */
     private $entityManager;
+    private $userRepository;
 
     /**
      * @var UserPasswordEncoderInterface
@@ -29,6 +30,13 @@ class UserManager
     {
         $this->entityManager = $entityManager;
         $this->encoder = $encoder;
+        $this->userRepository = $entityManager->getRepository(User::class);
+    }
+    
+    public function addUser($user)
+    {
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
     }
 
     /**
@@ -37,6 +45,35 @@ class UserManager
     public function getAllUsers() :array
     {
         return $this->entityManager->getRepository(User::class)->findAll();
+    }
+    
+    public function getUserById($idUser)
+    {
+        $user = $this->userRepository->findOneById($idUser);
+        return $user;
+        
+    }
+    
+    public function banUser($user)
+    {
+        $user->setIsBanished(1);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+    }
+    
+    public function unBanUser($user)
+    {
+        $user->setIsBanished(0);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+    }
+    
+    /**
+     * @return array
+     */
+    public function getAllUsersNotBanned() :array
+    {
+        return $this->entityManager->getRepository(User::class)->findByIsBanished(0);
     }
 
     /**
@@ -56,15 +93,9 @@ class UserManager
      */
     public function getUsersBanned() :array
     {
-        $query = $this->entityManager->createQueryBuilder()
-            ->select('u')
-            ->from(User::class, 'u')
-            ->where('u.isBanished = :isBanished')
-            ->setParameter('isBanished', 1)
-            ->getQuery()
-            ->getResult()
-        ;
-        return $query;
+        $list = $this->userRepository->findByIsBanished(1);
+          
+        return $list;
     }
 
     /**
