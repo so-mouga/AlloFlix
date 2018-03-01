@@ -18,7 +18,7 @@
             {% for category in listCategory %}
                 <tr>
                     <td id="label_{{ category.id }}">{{ category.label }}</td>
-                    <td id="edit_{{ category.id }}"><button id="{{ category.id }}" class="btn-primary edit">Edit</button></td>
+                    <td id="edit_{{ category.id }}"><button id="{{ category.id }}" class="btn btn-primary edit">Edit</button></td>
                     <td id="drop_{{ category.id }}">
                         <form action="{{ path('delete_category', {'id_delete': category.id}) }}" method="post">
                             <input type="submit" value="Drop" class="btn btn-danger">
