@@ -25,8 +25,8 @@
                 <td id="fullname_{{ actor.id }}">{{ actor.fullName }}</td>
                 <td id="desc_{{ actor.id }}">{{ actor.description }}</td>
                 <td id="image_{{ actor.id }}">{{ actor.image }}</td>
-                <td id="edit_{{ actor.id }}"><button class="btn-primary edit">Edit</button></td>
-                <td id="drop_{{ actor.id }}"><button class="btn-danger">Drop</button></td>
+                <td id="edit_{{ actor.id }}"><button id="{{ actor.id }}" class="btn-primary edit">Edit</button></td>
+                <td id="drop_{{ actor.id }}"><a href="{{ path('delete_actor', {'id_delete': actor.id}) }}"><button class="btn-danger">Drop</button></a></td>
             </tr>
             {% else %}
                 <p>Pas (encore !) d'actor</p>
@@ -34,4 +34,18 @@
         </table>
 
     </div>
+    <script>
+        $(document).ready(function(){
+            $(".edit").click(function(){
+                var id = $(this).attr('id');
+                var fullname = $("#fullname_"+id).text();
+                var desc = $("#desc_"+id).text();
+                var img = $("#image_"+id).text();
+                $('#appbundle_actor_fullName').val(fullname);
+                $('#appbundle_actor_description').val(desc);
+                $('#appbundle_actor_image').val(img);
+                $('#appbundle_actor_id').val(id);
+            });
+        });
+    </script>
 {% endblock %}

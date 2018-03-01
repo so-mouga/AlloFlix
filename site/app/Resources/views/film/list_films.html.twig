@@ -2,19 +2,33 @@
 
 {% block body %}
     <div class="list-film">
-        
         <h2> liste de films </h2>
-        <ul>
+        <div class="list-search">
+            <div class="search-cat">
+                <label for="categorie">Catégories</label><br />
+                <select name="categorie" id="categorie">
+                    <option value="null">NA</option>
+                    {% for categorie in categories %}
+                        <option value="{{ categorie.id }}">{{ categorie.label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="search-note">
+                <label for="note">Note</label><br />
+                <select name="note" id="note">
+                    <option value="null">NA</option>
+                    {% for note in notes %}
+                        <option value="{{ note }}">{{ note }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+        </div>
+        <ul class="list-films list-films-page">
             {% for film in listFilms %}
-                <li>
-                    <a href="{{ path('film', {'filmID': film.id}) }}">
-                        {{ film.name }}
-                    </a>
-                    Description {{ film.description }},
-                    le {{ film.createdAt|date('d/m/Y') }}
-                </li>
+                {% include 'include/film_block.html.twig' %}
             {% else %}
-                <li>Pas (encore !) d'annonces</li>
+                <li>Pas (encore !) de film</li>
             {% endfor %}
         </ul>
 

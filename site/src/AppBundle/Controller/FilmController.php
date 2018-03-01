@@ -8,27 +8,48 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Comment;
+use AppBundle\Form\CommentType;
+use AppBundle\Manager\CategoryManager;
+use AppBundle\Manager\CommentManager;
 use AppBundle\Manager\FilmManager;
-use Psr\Log\LoggerInterface;
+use AppBundle\Manager\SagaManager;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class FilmController extends Controller
 {
     private $manager;
-    private $logger;
 
-    public function __construct(FilmManager $manager, LoggerInterface $logger)
+    /**
+     * @var SagaManager
+     */
+    private $sagaManager;
+    /**
+     * @var CommentManager
+     */
+    private $commentManager;
+    /**
+     * @var CategoryManager
+     */
+    private $categoryManager;
+
+    public function __construct(FilmManager $manager, SagaManager $sagaManager, CommentManager $commentManager, CategoryManager $categoryManager)
     {
         $this->manager = $manager;
-        $this->logger = $logger;
+        $this->sagaManager = $sagaManager;
+        $this->commentManager = $commentManager;
+        $this->categoryManager = $categoryManager;
     }
 
     /**
-     * @Route("/films/{idPage}", name="films")
+     * @Route("/films/{idPage}", name="films", requirements={"idPage" = "\d+"})
      *
      * @param $idPage
      * @return \Symfony\Component\HttpFoundation\Response
@@ -36,11 +57,16 @@ class FilmController extends Controller
     public function filmsAction(int $idPage)
     {
         $nbPerPage = 3;
+        $categories = $this->categoryManager->getAllCategories();
+        $notes = $this->commentManager::NOTES;
+
         $data = $this->manager->getAllFilms($idPage, $nbPerPage);
         return $this->render('film/list_films.html.twig', [
-            'listFilms' => $data[0],
-            'nbPages' => $data[1],
-            'page' => $idPage,
+            'listFilms'  => $data[0],
+            'nbPages'    => $data[1],
+            'page'       => $idPage,
+            'categories' => $categories,
+            'notes'      => $notes
         ]);
     }
 
@@ -49,9 +75,36 @@ class FilmController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function filmAction($filmID)
+    public function filmAction(Request $request, $filmID)
     {
-        return $this->render('film/film.html.twig');
+        $film = $this->manager->getFilmById($filmID);
+
+        if (null === $film) {
+            throw new NotFoundHttpException("La page n'existe pas");
+        }
+
+        $comment = new Comment();
+        $comment->setUser($this->getUser());
+        $comment->setFilm($film);
+
+        $commentUser = $this->commentManager->getCommentByUser($film, $this->getUser());
+
+        if ($commentUser){
+            $comment = $commentUser;
+        }
+
+        $form = $this->createForm(CommentType::class,$comment);
+
+        if ($request->isMethod('POST') AND  $form->handleRequest($request)->isValid()){
+
+            $this->commentManager->addComment($comment);
+        }
+
+            return $this->render('film/film.html.twig',[
+                'myFilm'    =>  $film,
+                'form'      =>  $form->createView(),
+                'myComment' =>  $commentUser
+        ]);
     }
 
     /**

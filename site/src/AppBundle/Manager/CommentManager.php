@@ -16,7 +16,16 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class CommentManager
 {
+    /**
+     * @var EntityManagerInterface
+     */
     private $em;
+
+    /**
+     * notes commentary
+     * @var array
+     */
+    const NOTES = [1,2,3,4,5,6,7,8,9,10];
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -42,21 +51,31 @@ class CommentManager
 
 
     /**
-     * @param string $description
-     * @param int $note
-     * @param User $user
-     * @param Film $film
-     * @return bool
+     * @param Comment $comment
+     * @return Comment|null
      */
-    public function addComment(string $description, int $note, User $user, Film $film) : bool{
-        $comment = new Comment();
-        $comment->setDescription($description)
-            ->setNote($note)
-            ->setUser($user)
-            ->setFilm($film);
-
+    public function addComment(Comment $comment) : ?Comment
+    {
         $this->em->persist($comment);
         $this->em->flush();
-        return true;
+
+        return $comment;
+    }
+
+    /**
+     * @param Film $film
+     * @param User $user
+     * @return Comment|null
+     */
+    public function getCommentByUser(Film $film, User $user) : ?Comment
+    {
+        $commentUser = null;
+        foreach ($user->getComments() as $comment){
+            if ($comment->getFilm()->getId() === $film->getId()){
+                $commentUser = $comment;
+                break;
+            }
+        }
+        return $commentUser;
     }
 }
