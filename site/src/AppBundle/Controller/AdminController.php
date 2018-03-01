@@ -87,18 +87,7 @@ class AdminController extends Controller
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid())
         {
-            $em = $this->getDoctrine()->getManager();
-            if (null != $request->request->get('appbundle_actor')['id'])
-            {
-                $data = $request->request->get('appbundle_actor');
-                $this->manager->editActor($data);
-                $request->getSession()->getFlashBag()->add('info', 'well edited actor.');
-            }else {
-                $em->persist($actor);
-                $request->getSession()->getFlashBag()->add('info', 'well recorded actor.');
-            }
-            $em->flush();
-
+                $this->manager->editActor($request, $actor);
         }
 
         return $this->render('admin/admin_actor.html.twig', array(
