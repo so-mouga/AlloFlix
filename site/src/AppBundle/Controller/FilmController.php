@@ -14,14 +14,19 @@ use AppBundle\Manager\CategoryManager;
 use AppBundle\Manager\CommentManager;
 use AppBundle\Manager\FilmManager;
 use AppBundle\Manager\SagaManager;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class FilmController extends Controller
 {
     private $manager;
+
     /**
      * @var SagaManager
      */
@@ -120,5 +125,24 @@ class FilmController extends Controller
     public function filmWatchLaterAction()
     {
         return $this->render('film/film_watch_later.html.twig');
+    }
+    /**
+     * SearchFilmAction
+     *
+     * @Route("/film/search", name="film_search", condition="request.isXmlHttpRequest()")
+     */
+    public function searchFilmAction(Request $request){
+        $word = $request->query->get('search');
+        $films = $this->manager->getFilmSearch($word);
+        $items = array();
+        $response = new JsonResponse();
+        foreach ($films as $film){
+            $items[] = [
+                'id' => $film->getId(),
+                'name' => $film->getName()
+            ];
+
+        }
+         return $response->setData(array('films'=>$items));
     }
 }
