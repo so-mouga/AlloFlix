@@ -116,7 +116,7 @@ class FilmController extends Controller
     }
 
     /**
-     * @Route("/playlist_heart", name="film_heart")
+     * @Route("/film/playlist_heart", name="film_heart")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -128,7 +128,7 @@ class FilmController extends Controller
     }
 
     /**
-     * @Route("/playlist_later", name="film_later")
+     * @Route("/film/playlist_later", name="film_later")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
