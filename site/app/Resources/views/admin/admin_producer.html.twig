@@ -34,7 +34,7 @@
                     <td id="fullname_{{ producer.id }}">{{ producer.fullName }}</td>
                     <td id="desc_{{ producer.id }}">{{ producer.description }}</td>
                     <td id="image_{{ producer.id }}">{{ producer.image }}</td>
-                    <td id="edit_{{ producer.id }}"><button id="{{ producer.id }}" class="btn-primary edit">Edit</button></td>
+                    <td id="edit_{{ producer.id }}"><button id="{{ producer.id }}" class="btn btn-primary edit">Edit</button></td>
                     <td id="drop_{{ producer.id }}">
                         <form action="{{ path('delete_producer', {'id_delete': producer.id}) }}" method="post">
                             <input type="submit" value="Drop" class="btn btn-danger">
