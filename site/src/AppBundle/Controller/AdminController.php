@@ -9,10 +9,13 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Film;
+use AppBundle\Entity\Producer;
 use AppBundle\Form\FilmType;
+use AppBundle\Form\ProducerType;
 use AppBundle\Manager\ActorManager;
 use AppBundle\Entity\Actor;
 use AppBundle\Form\ActorType;
+use AppBundle\Manager\ProducerManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,11 +25,22 @@ class AdminController extends Controller
     /**
      * @var EntityManagerInterface
      */
-    private $manager;
+    private $actorManager;
 
-    public function __construct(ActorManager $manager)
+    /**
+     * @var ProducerManager
+     */
+    private $producerManager;
+
+    /**
+     * AdminController constructor.
+     * @param ActorManager $actorManager
+     * @param ProducerManager $producerManager
+     */
+    public function __construct(ActorManager $actorManager, ProducerManager $producerManager)
     {
-        $this->manager = $manager;
+        $this->actorManager = $actorManager;
+        $this->producerManager = $producerManager;
     }
 
     /**
@@ -87,23 +101,12 @@ class AdminController extends Controller
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid())
         {
-            $em = $this->getDoctrine()->getManager();
-            if (null != $request->request->get('appbundle_actor')['id'])
-            {
-                $data = $request->request->get('appbundle_actor');
-                $this->manager->editActor($data);
-                $request->getSession()->getFlashBag()->add('info', 'well edited actor.');
-            }else {
-                $em->persist($actor);
-                $request->getSession()->getFlashBag()->add('info', 'well recorded actor.');
-            }
-            $em->flush();
-
+                $this->actorManager->editActor($request, $actor);
         }
 
         return $this->render('admin/admin_actor.html.twig', array(
             'form' => $form->createView(),
-            'listActor' => $this->manager->getAllActors()
+            'listActor' => $this->actorManager->getAllActors()
         ));
     }
 
@@ -114,10 +117,55 @@ class AdminController extends Controller
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @internal param $id
      */
-    public function deleteAction(int $id_delete, Request $request)
+    public function deleteActorAction(int $id_delete, Request $request)
     {
-       $this->manager->deleteActor($id_delete);
-        $request->getSession()->getFlashBag()->add('info', "L'actor a bien été supprimée.");
-        return $this->redirectToRoute('create_actor');
+        $submittedToken = $request->request->get('_csrf_token');
+
+        if ($request->isMethod('POST') && $this->isCsrfTokenValid('delete-actor', $submittedToken))
+        {
+           $this->actorManager->deleteActor($id_delete);
+            $request->getSession()->getFlashBag()->add('info', "L'actor a bien été supprimée.");
+            return $this->redirectToRoute('create_actor');
+        }
+    }
+
+    /**
+     * @Route("/admin/producer", name="create_producer")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function createProducerAction(Request $request)
+    {
+        $producer = new Producer();
+        $form = $this->createForm(ProducerType::class, $producer);
+
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid())
+        {
+            $this->producerManager->createProducer($request, $producer);
+        }
+
+        return $this->render('admin/admin_Producer.html.twig', array(
+            'form' => $form->createView(),
+            'listProducer' => $this->producerManager->getAllProducers()
+            ));
+    }
+
+    /**
+     * @Route("/producer/actor/delete/{id_delete}", name="delete_producer")
+     * @param int $id_delete
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @internal param $id
+     */
+    public function deleteProducerAction(int $id_delete, Request $request)
+    {
+        $submittedToken = $request->request->get('_csrf_token');
+
+        if ($request->isMethod('POST') && $this->isCsrfTokenValid('delete-producer', $submittedToken))
+        {
+            $this->producerManager->deleteProducer($id_delete);
+            $request->getSession()->getFlashBag()->add('info', "Le Producer a bien été supprimée.");
+            return $this->redirectToRoute('create_producer');
+        }
     }
 }
