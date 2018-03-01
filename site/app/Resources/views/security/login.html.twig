@@ -4,31 +4,35 @@
     {% if error %}
         <div>{{ error.messageKey }}</div>
     {% endif %}
-    <form action="{{ path('login') }}" method="post" class="form-horizontal ">
-        <label for="username">Email:</label>
-        <input type="text" id="username" name="_username" required value="{{ last_username }}" />
-        <label for="password">Mot de passe:</label>
-        <input type="password" id="password" required name="_password" />
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-        <button type="submit">login</button>
-    </form>
+    <div style="display:flex">
+        <div>
+            {{ form_start(form, {'attr': {'class': 'form-horizontal', 'action': path('create')}} )}}
 
+            <fieldset>
+                <legend>Creer votre compte </legend>
+                {{ form_widget(form.pseudo) }}
+                {{ form_widget(form.email) }}
+                {{ form_widget(form.password) }}
+                {{ form_widget(form.create) }}
+            </fieldset>
+            {{ form_rest(form) }}
+            {{ form_end(form) }}
 
-
-    {{ form_start(form, {'attr': {'class': 'form-horizontal', 'action': path('create')}} )}}
-        <div class="form-group">
-
+            {% for message in app.session.flashbag.get('info') %}
+                <p>Message flash : {{ message }}</p>
+            {% endfor %}
         </div>
-        {{ form_widget(form.pseudo) }}
-        {{ form_widget(form.email) }}
-        {{ form_widget(form.password) }}
-        {{ form_widget(form.create) }}
+        <div>
+            <form action="{{ path('login') }}" method="post" class="form-horizontal" id="form_connexion">
+                <fieldset>
+                    <legend> Connexion </legend>
+                    <input class="connexion" type="text" id="username" name="_username" required value="{{ last_username }}" placeholder="email" />
+                    <input class="connexion" type="password" id="password" required name="_password" placeholder="password"/>
+                    <button class="login" type="submit">login</button>
+                </fieldset>
+            </form>
+        </div>
+    </div>
 
-    {{ form_rest(form) }}
-    {{ form_end(form) }}
-
-    {% for message in app.session.flashbag.get('info') %}
-        <p>Message flash : {{ message }}</p>
-    {% endfor %}
 
 {% endblock %}
