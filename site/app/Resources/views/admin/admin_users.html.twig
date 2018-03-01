@@ -2,5 +2,12 @@
 
 {% block body %}
     <p> admin user </p>
+    <input type="text" id="find_user">
+    <span id="path_user_search" style="display:none">{{ path('user_search') }}</span>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/search_admin.js') }}" type="text/javascript"></script>
 {% endblock %}
 

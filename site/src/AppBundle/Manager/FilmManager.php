@@ -208,18 +208,15 @@ class FilmManager
         return $query;*/
         return $films;
     }
-    public function getFilmSearch(string $search) : array{
-        dump($search);
-        $result = [];
-        $query = $this->em->createQueryBuilder()
-            ->select('f')
-            ->from(Film::class, 'f')
-            ->where('f.name LIKE :word')
-            ->setParameter('word','%'.$search.'%')
-            ->getQuery()
-            ->getResult()
-        ;
-        return $query;
+
+    /**
+     * @param string $search
+     * @return array
+     */
+    public function searchFilm(string $search) : array{
+        //dump($search);
+        $films = $this->filmRepository->searchFilm($search);
+        return $films;
     }
 
     /**

@@ -1,21 +1,22 @@
 $(function ()
 {
-    $('#find_film').autocomplete({
+    $('#find_user').autocomplete({
         source: function(request, response){
             $.ajax({
                 type : "get",
-                url:$('#path_film_search').text(),
+                url:$('#path_user_search').text(),
                 data : {
-                    'search' : $('#find_film').val()
+                    'search' : $('#find_user').val()
                 },
                 success : function(data){
-                    response($.map(data.films,function(item){
+                    console.log(data);
+                    response($.map(data.users,function(item){
                         //console.log(item.name);
-                        return item.name;
+                        return item.pseudo;
                     }));
 
                 }
             });
-        }
+        },
     });
 });

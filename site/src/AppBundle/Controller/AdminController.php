@@ -11,14 +11,17 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Category;
 use AppBundle\Entity\Film;
 use AppBundle\Entity\Producer;
+use AppBundle\Entity\Saga;
 use AppBundle\Form\CategoryType;
 use AppBundle\Form\FilmType;
 use AppBundle\Form\ProducerType;
+use AppBundle\Form\SagaType;
 use AppBundle\Manager\ActorManager;
 use AppBundle\Entity\Actor;
 use AppBundle\Form\ActorType;
 use AppBundle\Manager\CategoryManager;
 use AppBundle\Manager\ProducerManager;
+use AppBundle\Manager\SagaManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,19 +38,29 @@ class AdminController extends Controller
      */
     private $producerManager;
 
+    /**
+     * @var CategoryManager
+     */
     private $categoryManager;
+
+    private $sagaManager;
 
     /**
      * AdminController constructor.
      * @param ActorManager $actorManager
      * @param ProducerManager $producerManager
      * @param CategoryManager $categoryManager
+     * @param SagaManager $sagaManager
      */
-    public function __construct(ActorManager $actorManager,ProducerManager $producerManager,CategoryManager $categoryManager)
+    public function __construct(ActorManager $actorManager,
+                                ProducerManager $producerManager,
+                                CategoryManager $categoryManager,
+                                SagaManager $sagaManager)
     {
         $this->actorManager = $actorManager;
         $this->producerManager = $producerManager;
         $this->categoryManager = $categoryManager;
+        $this->sagaManager = $sagaManager;
     }
 
     /**
@@ -213,6 +226,46 @@ class AdminController extends Controller
             $this->categoryManager->deleteCategory($id_delete);
             $request->getSession()->getFlashBag()->add('info', "Le category a bien été supprimée.");
             return $this->redirectToRoute('create_category');
+        }
+    }
+
+    /**
+     * @Route("/admin/saga", name="create_saga")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function createSagaAction(Request $request)
+    {
+        $saga = new Saga();
+        $form = $this->createForm(SagaType::class, $saga);
+
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid())
+        {
+            $this->sagaManager->createSaga($request, $saga);
+        }
+
+        return $this->render('admin/admin_saga.html.twig', array(
+            'form' => $form->createView(),
+            'listSaga' => $this->sagaManager->getAllSaga()
+        ));
+    }
+
+    /**
+     * @Route("/admin/saga/delete/{id_delete}", name="delete_saga")
+     * @param int $id_delete
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @internal param $id
+     */
+    public function deleteSagaAction(int $id_delete, Request $request)
+    {
+        $submittedToken = $request->request->get('_csrf_token');
+
+        if ($request->isMethod('POST') && $this->isCsrfTokenValid('delete-saga', $submittedToken))
+        {
+            $this->sagaManager->deleteSaga($id_delete);
+            $request->getSession()->getFlashBag()->add('info', "Le saga a bien été supprimée.");
+            return $this->redirectToRoute('create_saga');
         }
     }
 }
