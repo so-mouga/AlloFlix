@@ -4,6 +4,7 @@ namespace AppBundle\Manager;
 
 use AppBundle\Entity\Actor;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class ActorManager
 {
@@ -124,14 +125,31 @@ class ActorManager
         return true;
     }
 
-    public function editActor(array $data)
+    /**
+     * @param Request $request
+     * @param Actor $actor
+     */
+    public function editActor(Request $request , Actor $actor)
     {
-        $actor = $this->getActorById($data['id']);
-        $actor->setFullName($data['fullName']);
-        $actor->setDescription($data['description']);
-        $actor->setImage($data['image']);
+        if (null != $request->request->get('appbundle_actor')['id'])
+        {
+            $data = $request->request->get('appbundle_actor');
+            $actor = $this->getActorById($data['id']);
+            $actor->setFullName($data['fullName']);
+            $actor->setDescription($data['description']);
+            $actor->setImage($data['image']);
+            $request->getSession()->getFlashBag()->add('info', 'well edited actor.');
+        }else {
+            $this->em->persist($actor);
+            $request->getSession()->getFlashBag()->add('info', 'well recorded actor.');
+        }
+        $this->em->flush();
+
     }
 
+    /**
+     * @param int $id
+     */
     public function deleteActor(int $id)
     {
         $actor = $this->getActorById($id);
@@ -139,8 +157,6 @@ class ActorManager
         if (null === $actor) {
             throw new NotFoundHttpException("L'actor d'id ".$id." n'existe pas.");
         }
-
-
         $this->em->remove($actor);
         $this->em->flush();
     }
