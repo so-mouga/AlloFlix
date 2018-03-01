@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class FilmController extends Controller
 {
@@ -121,7 +122,9 @@ class FilmController extends Controller
      */
     public function filmHeartStrokeAction()
     {
-        return $this->render('film/film_heart_stroke.html.twig');
+        return $this->render('film/film_heart_stroke.html.twig',[
+            'filmsHeart' =>  $this->getUser()->getListFilmHeartStroke()->getValues()
+        ]);
     }
 
     /**
@@ -131,12 +134,15 @@ class FilmController extends Controller
      */
     public function filmWatchLaterAction()
     {
-        return $this->render('film/film_watch_later.html.twig');
+        return $this->render('film/film_watch_later.html.twig', [
+            'filmsWait' =>  $this->getUser()->getListFilmWatchLater()->getValues()
+        ]);
     }
+
     /**
      * SearchFilmAction
      *
-     * @Route("/film/search", name="film_search", condition="request.isXmlHttpRequest()")
+     * @Route("/search_ajax", name="film_search", condition="request.isXmlHttpRequest()")
      */
     public function searchFilmAction(Request $request){
         $word = $request->query->get('search');
@@ -206,4 +212,37 @@ class FilmController extends Controller
         }
         return new JsonResponse(['data' =>  $filmId, 'watch' => $watch]);
     }
+
+    /**
+     * @Route("/search_film_top", name="search_film_top")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function filmTopBarreAction(Request $request)
+    {
+        $nameFilm = $request->request->get('film_name');
+        $film = $this->manager->getFilmByName($nameFilm);
+
+        if (!empty($film)) {
+            return $this->redirectToRoute('film',[
+                'filmID' => $film[0]->getId()
+            ]);
+        }
+        return $this->redirectToRoute('film_no_found',[
+            'filmName' =>  $nameFilm
+        ]);
+    }
+
+    /**
+     * @Route("/film/no_found/{filmName}", name="film_no_found")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function filmNoFoundAction($filmName)
+    {
+        return $this->render('film/film_no_found.html.twig', [
+            'filmName' => $filmName
+        ]);
+    }
 }
+
