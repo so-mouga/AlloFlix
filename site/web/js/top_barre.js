@@ -9,7 +9,6 @@ $(function ()
                     'search' : $('#find_film').val()
                 },
                 success : function(data){
-                    //console.log(data.films);
                     response($.map(data.films,function(item){
                         //console.log(item.name);
                         return item.name;
@@ -17,6 +16,6 @@ $(function ()
 
                 }
             });
-        },
+        }
     });
 });
