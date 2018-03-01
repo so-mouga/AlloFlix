@@ -8,6 +8,7 @@ use AppBundle\Entity\Comment;
 use AppBundle\Entity\Film;
 use AppBundle\Entity\Producer;
 use AppBundle\Entity\Saga;
+use AppBundle\Entity\User;
 use Symfony\Component\Validator\Constraints\DateTime;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -155,15 +156,15 @@ class FilmManager
      * @param Film $film
      * @return int
      */
-    public function getRateByFilm(Film $film) : int{
-
+    public function getRateByFilm(Film $film) : ?int
+    {
         $comments = $film->getComments();
             $rate = 0;
             foreach ($comments as $comment){
                 $rate += $comment->getNote();
             }
             if(count($comments) == 0){
-                return 0;
+                return null;
             }
             else{
                 return round($rate / count($comments),1);
@@ -219,5 +220,93 @@ class FilmManager
             ->getResult()
         ;
         return $query;
+    }
+
+    /**
+     * @param User $user
+     * @param Film $film
+     * @return bool
+     */
+    public function getFilmHeartByUser(User $user,Film $film) :bool
+    {
+        /* @var \AppBundle\Entity\Film $filmHeart*/
+        foreach ($user->getListFilmHeartStroke()->getValues() as $filmHeart){
+            if ($filmHeart->getId() === $film->getId()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param User $user
+     * @param Film $film
+     * @return bool
+     */
+    public function getFilmWatchLaterByUser(User $user,Film $film) :bool
+    {
+        /* @var \AppBundle\Entity\Film $filmLater*/
+        foreach ($user->getListFilmWatchLater() as $filmLater){
+            if ($filmLater->getId() === $film->getId()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param Film $film
+     * @param User $user
+     * @return bool
+     */
+    public function addFilmHeart(Film $film, User $user) :bool
+    {
+        $user->addListFilmHeartStroke($film);
+        $this->em->persist($user);
+        $this->em->flush();
+
+        return true;
+    }
+
+    /**
+     * @param Film $film
+     * @param User $user
+     * @return bool
+     */
+    public function removeFilmHeart(Film $film, User $user) :bool
+    {
+        $user->removeListFilmHeartStroke($film);
+        $this->em->persist($user);
+        $this->em->flush();
+
+        return true;
+    }
+
+    /**
+     * @param Film $film
+     * @param User $user
+     * @return bool
+     */
+    public function addFilmWatch(Film $film, User $user) :bool
+    {
+        $user->addListFilmWatchLater($film);
+        $this->em->persist($user);
+        $this->em->flush();
+
+        return true;
+    }
+
+    /**
+     * @param Film $film
+     * @param User $user
+     * @return bool
+     */
+    public function removeFilmWatch(Film $film, User $user) :bool
+    {
+        $user->removeListFilmWatchLater($film);
+        $this->em->persist($user);
+        $this->em->flush();
+
+        return true;
     }
 }

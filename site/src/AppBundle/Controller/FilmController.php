@@ -14,17 +14,18 @@ use AppBundle\Manager\CategoryManager;
 use AppBundle\Manager\CommentManager;
 use AppBundle\Manager\FilmManager;
 use AppBundle\Manager\SagaManager;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class FilmController extends Controller
 {
+    /**
+     * @var FilmManager
+     */
     private $manager;
 
     /**
@@ -56,7 +57,7 @@ class FilmController extends Controller
      */
     public function filmsAction(int $idPage)
     {
-        $nbPerPage = 3;
+        $nbPerPage = 6;
         $categories = $this->categoryManager->getAllCategories();
         $notes = $this->commentManager::NOTES;
 
@@ -83,6 +84,10 @@ class FilmController extends Controller
             throw new NotFoundHttpException("La page n'existe pas");
         }
 
+        $notes = $this->manager->getRateByFilm($film);
+        $filmHeart = $this->manager->getFilmHeartByUser($this->getUser(), $film);
+        $filmWatchLater = $this->manager->getFilmWatchLaterByUser($this->getUser(), $film);
+
         $comment = new Comment();
         $comment->setUser($this->getUser());
         $comment->setFilm($film);
@@ -96,14 +101,16 @@ class FilmController extends Controller
         $form = $this->createForm(CommentType::class,$comment);
 
         if ($request->isMethod('POST') AND  $form->handleRequest($request)->isValid()){
-
             $this->commentManager->addComment($comment);
         }
 
-            return $this->render('film/film.html.twig',[
-                'myFilm'    =>  $film,
-                'form'      =>  $form->createView(),
-                'myComment' =>  $commentUser
+        return $this->render('film/film.html.twig',[
+                'myFilm'         =>  $film,
+                'form'           =>  $form->createView(),
+                'myComment'      =>  $commentUser,
+                'noteMovie'      =>  $notes,
+                'filmHeart'      =>  $filmHeart,
+                'filmWatchLater' =>  $filmWatchLater,
         ]);
     }
 
@@ -144,5 +151,59 @@ class FilmController extends Controller
 
         }
          return $response->setData(array('films'=>$items));
+    }
+
+    /**
+     * @Route("/love_film_js", name="love_film_js")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function loveFilmAction(Request $request)
+    {
+        $loveUserFilm = $request->request->get('love');
+        $filmId = $request->request->get('filmId');
+        $film = $this->manager->getFilmById($filmId);
+
+        if (empty($film)) {
+            return new JsonResponse(['message' => 'film no found'], Response::HTTP_NOT_FOUND);
+        }
+
+        if ($loveUserFilm == 'true'){
+            $this->manager->addFilmHeart($film, $this->getUser());
+            $love = true;
+        }
+
+        if ($loveUserFilm == 'false'){
+            $this->manager->removeFilmHeart($film, $this->getUser());
+            $love = false;
+        }
+        return new JsonResponse(['data' =>  $filmId, 'love' => $love]);
+    }
+
+    /**
+     * @Route("/watch_film_js", name="watch_film_js")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function watchFilmAction(Request $request)
+    {
+        $watchUserFilm = $request->request->get('later');
+        $filmId = $request->request->get('filmId');
+        $film = $this->manager->getFilmById($filmId);
+
+        if (empty($film)) {
+            return new JsonResponse(['message' => 'film no found'], Response::HTTP_NOT_FOUND);
+        }
+
+        if ($watchUserFilm == 'true'){
+            $this->manager->addFilmWatch($film, $this->getUser());
+            $watch = true;
+        }
+
+        if ($watchUserFilm == 'false'){
+            $this->manager->removeFilmWatch($film, $this->getUser());
+            $watch = false;
+        }
+        return new JsonResponse(['data' =>  $filmId, 'watch' => $watch]);
     }
 }
