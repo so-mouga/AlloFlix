@@ -28,6 +28,7 @@
                     <legend> Connexion </legend>
                     <input class="connexion" type="text" id="username" name="_username" required value="{{ last_username }}" placeholder="email" />
                     <input class="connexion" type="password" id="password" required name="_password" placeholder="password"/>
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">git s
                     <button class="login" type="submit">login</button>
                 </fieldset>
             </form>
