@@ -9,16 +9,22 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Manager\FilmManager;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class FilmController extends Controller
 {
     private $manager;
+    private $logger;
 
-    public function __construct(FilmManager $manager)
+    public function __construct(FilmManager $manager, LoggerInterface $logger)
     {
         $this->manager = $manager;
+        $this->logger = $logger;
     }
 
     /**
@@ -66,5 +72,24 @@ class FilmController extends Controller
     public function filmWatchLaterAction()
     {
         return $this->render('film/film_watch_later.html.twig');
+    }
+    /**
+     * SearchFilmAction
+     *
+     * @Route("/film/search", name="film_search", condition="request.isXmlHttpRequest()")
+     */
+    public function searchFilmAction(Request $request){
+        $word = $request->query->get('search');
+        $films = $this->manager->getFilmSearch($word);
+        $items = array();
+        $response = new JsonResponse();
+        foreach ($films as $film){
+            $items[] = [
+                'id' => $film->getId(),
+                'name' => $film->getName()
+            ];
+
+        }
+         return $response->setData(array('films'=>$items));
     }
 }
