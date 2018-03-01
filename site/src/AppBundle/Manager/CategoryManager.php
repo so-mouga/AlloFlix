@@ -4,6 +4,7 @@ namespace AppBundle\Manager;
 
 use Doctrine\ORM\EntityManagerInterface;
 use AppBundle\Entity\Category;
+use Symfony\Component\HttpFoundation\Request;
 
 class CategoryManager
 {
@@ -81,6 +82,39 @@ class CategoryManager
         $this->em->persist($category);
         $this->em->flush();
         return true;
+    }
+
+    /**
+     * @param Request $request
+     * @param Category $category
+     */
+    public function createCategory(Request $request, Category $category)
+    {
+        if (null != $request->request->get('appbundle_category')['id'])
+        {
+            $data = $request->request->get('appbundle_category');
+            $category = $this->getCategoryById($data['id']);
+            $category->setLabel($data['label']);
+            $request->getSession()->getFlashBag()->add('info', 'well edited category.');
+        }else {
+            $this->em->persist($category);
+            $request->getSession()->getFlashBag()->add('info', 'well recorded category.');
+        }
+        $this->em->flush();
+    }
+
+    /**
+     * @param int $id
+     */
+    public function deleteCategory(int $id)
+    {
+        $category = $this->getCategoryById($id);
+
+        if (null === $category) {
+            throw new NotFoundHttpException("category d'id ".$id." n'existe pas.");
+        }
+        $this->em->remove($category);
+        $this->em->flush();
     }
 }
 
