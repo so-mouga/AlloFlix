@@ -133,7 +133,7 @@ class FilmController extends Controller
      */
     public function searchFilmAction(Request $request){
         $word = $request->query->get('search');
-        $films = $this->manager->getFilmSearch($word);
+        $films = $this->manager->searchFilm($word);
         $items = array();
         $response = new JsonResponse();
         foreach ($films as $film){

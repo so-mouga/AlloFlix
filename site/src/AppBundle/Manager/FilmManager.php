@@ -207,7 +207,12 @@ class FilmManager
         return $query;*/
         return $films;
     }
-    public function getFilmSearch(string $search) : array{
+
+    /**
+     * @param string $search
+     * @return array
+     */
+    public function searchFilm(string $search) : array{
         //dump($search);
         $films = $this->filmRepository->searchFilm($search);
         return $films;
