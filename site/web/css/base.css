@@ -135,3 +135,18 @@ a:hover
 {
     margin-top: 50px;
 }
+
+.ui-corner-all{
+    background-color:white;
+    list-style-type: none;
+    border:1px solid lightgray;
+
+}
+.ui-corner-all:hover{
+    color:black;
+}
+
+.ui-autocomplete{
+    width:130px !important;
+    overflow: hidden;
+}

@@ -25,10 +25,13 @@ class UserManager
      */
     private $encoder;
 
+    private $userRepository;
+
     public function __construct(EntityManagerInterface $entityManager ,UserPasswordEncoderInterface $encoder)
     {
         $this->entityManager = $entityManager;
         $this->encoder = $encoder;
+        $this->userRepository = $entityManager->getRepository(User::class);
     }
 
     /**
@@ -82,5 +85,14 @@ class UserManager
             ->setRoles(['ROLE_ADMIN']);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
+    }
+
+    /**
+     * @param string $search
+     * @return array
+     */
+    public function searchUser(string $search) : array{
+        $actors = $this->userRepository->searchUser($search);
+        return $actors;
     }
 }
