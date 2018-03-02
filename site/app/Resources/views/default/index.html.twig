@@ -3,10 +3,39 @@
 {% block body %}
     <div class="film-selected">
         <h2>Notre selection de film</h2>
+        
+        {%  for filmSelected in listFilmSelected %}
+        <div style="color:white; display:flex;">
+        
+            <div class="one-film">
+        <a href="{{ path('film', { 'filmID': filmSelected.id }) }}">
+            <img src="{{ filmSelected.image }}" width="250" height="150">
+        </a>
+        <a href="{{ path('film', { 'filmID': filmSelected.id }) }}">
+            <p>{{ filmSelected.name }}</p>
+        </a>
+    	</div>
+        </div>	 
+        {% endfor %}
 
     </div>
     <div class="film-recently">
         <h2>Ajouts récents</h2>
+        	
+        {%  for filmCurrent in listFilmCurrent %}
+         <div style="color:white; display:flex;">
+        
+            <div class="one-film">
+        <a href="{{ path('film', { 'filmID': filmCurrent.id }) }}">
+            <img src="{{ filmCurrent.image }}" width="250" height="150">
+        </a>
+        <a href="{{ path('film', { 'filmID': filmCurrent.id }) }}">
+            <p>{{ filmCurrent.name }}</p>
+        </a>
+    	</div>
+        </div>	      		 
+        {% endfor %}
+        
 
     </div>
 {% endblock %}

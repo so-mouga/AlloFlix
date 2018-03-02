@@ -40,23 +40,24 @@ class AdminController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function adminFilmsAction(Request $request)
+    public function adminFilmsAction(Request $request , FilmManager $filmManager)
     {
         $film = new Film();
-        $form = $this->createForm(FilmType::class);
-
+        $form = $this->createForm(FilmType::class , $film);
+        
+        $listFilms = $filmManager->getFilms();
+        $listFilmsSelected = $filmManager->getFilmSelected();
+        
         if ($request->isMethod('POST') AND  $form->handleRequest($request)->isValid()){
-            dump($form->getData());
-            exit;
-            $this->entityManager->persist($film);
-            $this->entityManager->flush();
+            $filmManager->addFilm($film);
+   
 
             $request->getSession()->getFlashBag()
                 ->add('info', 'Le film à bien été ajouté.');
         }
 
         return $this->render('admin/admin_films.html.twig',[
-            'form'  =>  $form->createView(),
+            'form'  =>  $form->createView(), "listFilms" => $listFilms , "listFilmsSelected" => $listFilmsSelected
         ]);
     }
 
@@ -95,6 +96,55 @@ class AdminController extends Controller
         return $this->redirectToRoute('admin_users');
 //         return $this->render('admin/admin_categories.html.twig');
     }
+    
+    /**
+     * @Route("/admin/modificationFilm/{idFilm}", name="modificationFilm")
+     *
+     */
+    public function adminModifFilmAction(FilmManager $filmManager , $idFilm)
+    {
+       
+        return $this->redirectToRoute('admin_films');
+    }
+    
+    /**
+     * @Route("/admin/deleteFilm/{idFilm}", name="deleteFilm")
+     *
+     */
+    public function adminDeleteFilmAction(FilmManager $filmManager , $idFilm)
+    {
+        $film = $filmManager->getFilmById($idFilm);
+       
+        $filmManager->deleteFilm($film);
+        
+        return $this->redirectToRoute('admin_films');
+        //         return $this->render('admin/admin_categories.html.twig');
+    }
+    
+    /**
+     * @Route("/admin/notSelectedFilm/{idFilm}", name="notSelectedFilm")
+     *
+     */
+    public function adminNotSelectedFilmAction(FilmManager $filmManager , $idFilm)
+    {
+        $film = $filmManager->getFilmById($idFilm);
+        $filmManager->notSelectedFilm($film);
+        return $this->redirectToRoute('admin_films');
+        
+    }
+    
+    /**
+     * @Route("/admin/isSelectedFilm/{idFilm}", name="isSelectedFilm")
+     *
+     */
+    public function adminIsSelectedFilmAction(FilmManager $filmManager , $idFilm)
+    {
+        $film = $filmManager->getFilmById($idFilm);
+        $filmManager->isSelectedFilm($film);
+        return $this->redirectToRoute('admin_films');
+        
+    }
+    
     
     /**
      * @Route("/admin/ban/{idUser}", name="ban")

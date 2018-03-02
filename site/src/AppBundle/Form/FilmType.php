@@ -31,7 +31,7 @@ class FilmType extends AbstractType
             ->add('saga', EntityType::class, array(
                 'class'        => 'AppBundle:Saga',
                 'choice_label' => 'label',
-                'multiple'     => true,
+                'multiple'     => false,
                 'expanded'     => true,
             ))
             ->add('categories', EntityType::class, array(

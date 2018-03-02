@@ -3,7 +3,7 @@
 {% block body %}
 
 	{{ form_start(form) }}
-	
+		<h1> Ajouter un utilisateur </h1>
 		<div> 
 		{{ form_label(form.pseudo) }}
 		{{ form_widget(form.pseudo ,{ 'attr' : { 'label' : 'Ajouter'} } ) }} 
@@ -23,12 +23,13 @@
 	
 	{{ form_end(form) }}
     <h1> Liste des Utilisateurs </h1>
-    <table>
-    	<tr style="background-color: #4CAF50;
-    color: white;">
-    		<td> Pseudo </td>
-    		<td> Mail </td>
-    		<td> Action </td>
+    <table style="text-align: center";>
+    	<tr>
+    		<div style="background-color: #4CAF50; color:white">
+        		<td> Pseudo </td>
+        		<td> Mail </td>
+        		<td> Action </td>
+    		</div>
     	</tr>
     {% for user in listUsers %}
     	<tr>
@@ -47,12 +48,13 @@
 	
     <h1> Liste des utilisateurs bannis </h1>
     
-    <table>
-    	<tr style="background-color: #4CAF50;
-    color: white;">
-    		<td> Pseudo </td>
-    		<td> Mail </td>
-    		<td> Action </td>
+    <table style="text-align: center";>
+    	<tr>
+    		<div style="background-color: #4CAF50; color:white">
+        		<td> Pseudo </td>
+        		<td> Mail </td>
+        		<td> Action </td>
+    		</div>
     	</tr>
     {% for userBanned in listUsersBanned %}
     	<tr>

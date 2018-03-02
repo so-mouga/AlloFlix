@@ -119,17 +119,19 @@ class FilmManager
      * @param \DateTime $releaseAt
      * @return bool
      */
-    public function addFilm(string $name, string $description, string $link, string $image, bool $isSelected, \DateTime $releaseAt) :bool{
-        $film = new Film();
-        $film->setName($name)
-            ->setDescription($description)
-            ->setLink($link)
-            ->setImage($image)
-            ->setIsSelected($isSelected)
-            ->setReleaseAt($releaseAt);
+    public function addFilm($film)
+    {
         $this->em->persist($film);
         $this->em->flush();
         return true;
+    }
+    
+    public function getFilms()
+    {
+     
+        $allFilms = $this->filmRepository->findAll();
+        return $allFilms;
+        
     }
 
     /**
@@ -138,6 +140,28 @@ class FilmManager
     public function getFilmSelected() : array{
         return $this->em->getRepository(Film::class)
             ->findByIsSelected(true);
+    }
+    
+    
+    public function deleteFilm($film)
+    {
+        
+        $this->em->remove($film);
+        $this->em->flush();
+    }
+    
+    public function notSelectedFilm($film)
+    {
+        $film->setIsSelected(0);
+        $this->em->persist($film);
+        $this->em->flush();
+    }
+    
+    public function isSelectedFilm($film)
+    {
+        $film->setIsSelected(1);
+        $this->em->persist($film);
+        $this->em->flush();
     }
 
     /**
@@ -194,7 +218,7 @@ class FilmManager
     public function getFilmByCreatedAt() : array{
         $films = $this->em->getRepository(Film::class)->findBy(
             [],
-            ['createdAt'=>'DESC']
+            ['createdAt'=>'DESC'] , 9
         );
         /*$query = $this->em->createQueryBuilder()
             ->select('f')
@@ -207,4 +231,6 @@ class FilmManager
         return $query;*/
         return $films;
     }
+    
+    
 }
