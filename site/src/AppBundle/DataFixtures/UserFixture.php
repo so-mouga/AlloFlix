@@ -16,11 +16,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 class UserFixture extends Fixture implements DependentFixtureInterface
 {
 
-    /**
-     * @var UserPasswordEncoderInterface
-     */
-
-
     public function load(ObjectManager $manager)
     {
         $users = [
@@ -55,7 +50,7 @@ class UserFixture extends Fixture implements DependentFixtureInterface
             $user->setRoles($oneUser['role']);
             $user->setEmail($oneUser['email']);
             $user->setIsBanished(false);
-            $user->setPassword('test');
+            $user->setPassword('$2y$13$veABY6kpgcaeZX1QO36AGeyAPzd0NeMrqU/Xo6qDeeDtxtJzW21u6');
 
             $user->addListFilmWatchLater($this->getReference('Film N°'.$i));
             $user->addListFilmHeartStroke($this->getReference('Film N°'.$a));
