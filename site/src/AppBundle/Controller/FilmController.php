@@ -239,4 +239,37 @@ class FilmController extends Controller
             'filmName' => $filmName
         ]);
     }
+
+    /**
+     * @Route("/films/category/{idPage}", name="films_categ", requirements={"idPage" = "\d+"})
+     *
+     * @param $idPage
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function filmsCategoryNoteAction( Request $request, int $idPage)
+    {
+        $nbPerPage = 6;
+
+        $id_category = $request->query->get('categorie');
+        $note = $request->query->get('note');
+        $note = intval($note);
+        $category = null ;
+        $id_category = intval($id_category);
+        $categories = $this->categoryManager->getAllCategories();
+        if($id_category != 0){
+            $category = $this->categoryManager->getCategoryById($id_category);
+        }
+        $films = $this->manager->getListFilmByCategOrNote($category,$note);
+        $notes = $this->commentManager::NOTES;
+        $nbPages = ceil(count($films) / $nbPerPage);
+        return $this->render('film/list_films.html.twig', [
+            'listFilms'  => $films,
+            'nbPages'    => $nbPages,
+            'page'       => $idPage,
+            'categories' => $categories,
+            'notes'      => $notes,
+            'category'   => $category,
+            'note'       => $note
+        ]);
+    }
 }

@@ -100,6 +100,22 @@ class FilmManager
         return [$listFilm, $nbPages];
     }
 
+    public function getAllFilmsByCategory(int $page,int $nbPerPage)
+    {
+        if ($page < 1) {
+            throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+        }
+        $listFilm = $this->em->getRepository(Film::class)
+            ->getAllFilm($page, $nbPerPage);
+
+        $nbPages = ceil(count($listFilm) / $nbPerPage);
+
+        if ($page > $nbPages) {
+            throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+        }
+
+        return [$listFilm, $nbPages];
+    }
     /**
      * @param int $id
      * @return Film
@@ -145,7 +161,6 @@ class FilmManager
     
     public function deleteFilm($film)
     {
-        
         $this->em->remove($film);
         $this->em->flush();
     }
@@ -173,12 +188,13 @@ class FilmManager
             ->findByName($name);
     }
 
+
     /**
      * @param int $note
+     * @param $films
      * @return array
      */
-    public function getFilmByRate(int $note) : array {
-        $films = $this->getAllFilms();
+    public function getFilmByRate(int $note, $films) : array {
 
         $goodRateFilm = [];
         foreach ($films as $film){
@@ -329,5 +345,26 @@ class FilmManager
 
     }
     
-    
+    public function getListFilmByCategOrNote(?Category $category, ?int $note){
+
+        if($category == null && $note == 0){
+            return $this->em->getRepository(Film::class)
+                ->findAll();
+        }
+        elseif ($category == null && $note != 0){
+
+            $films = $this->em->getRepository(Film::class)
+                ->findAll();
+            return $this->getFilmByRate($note,$films);
+        }
+        else{
+            $films = $category->getFilms();
+            if($note == 0){
+                return $films;
+            }
+            else{
+                return $this->getFilmByRate($note,$films);
+            }
+        }
+    }
 }
