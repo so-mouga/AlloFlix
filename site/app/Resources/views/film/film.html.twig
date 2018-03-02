@@ -31,6 +31,20 @@
             <h2>Description</h2>
             <p>{{ myFilm.description }}</p>
 
+            <div style="display: flex">
+                <p>acteur : </p>
+                {% for actor in myFilm.actors %}
+                    <p> {{ actor.fullName }}, </p>
+                {% endfor %}
+            </div>
+            <div style="display: flex">
+                <p>producteur : </p>
+                {% for producers in myFilm.producers %}
+                    <p> {{ producers.fullName }}, </p>
+                {% endfor %}
+            </div>
+
+            </ul>
         </div>
         <iframe width="500" height="320"
                 src="{{ myFilm.link }}">
