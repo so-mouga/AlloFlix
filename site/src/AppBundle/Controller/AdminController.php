@@ -1,17 +1,22 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: kevinmouga
+ * User: Nasser & Paul
  * Date: 26/02/2018
  * Time: 16:33
  */
 
+class AdminController extends Controller
+{
+  
+  
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Category;
 use AppBundle\Entity\Film;
 use AppBundle\Entity\Producer;
 use AppBundle\Entity\Saga;
+use AppBundle\Entity\User;
 use AppBundle\Form\CategoryType;
 use AppBundle\Form\FilmType;
 use AppBundle\Form\ProducerType;
@@ -20,8 +25,12 @@ use AppBundle\Manager\ActorManager;
 use AppBundle\Entity\Actor;
 use AppBundle\Form\ActorType;
 use AppBundle\Manager\CategoryManager;
+use AppBundle\Manager\FilmManager;
+use AppBundle\Manager\UserManager;
 use AppBundle\Manager\ProducerManager;
 use AppBundle\Manager\SagaManager;
+use AppBundle\Manager\UserManager;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,6 +53,7 @@ class AdminController extends Controller
     private $categoryManager;
 
     private $sagaManager;
+  
 
     /**
      * AdminController constructor.
@@ -69,23 +79,24 @@ class AdminController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function adminFilmsAction(Request $request)
+    public function adminFilmsAction(Request $request , FilmManager $filmManager)
     {
         $film = new Film();
-        $form = $this->createForm(FilmType::class);
-
+        $form = $this->createForm(FilmType::class , $film);
+        
+        $listFilms = $filmManager->getFilms();
+        $listFilmsSelected = $filmManager->getFilmSelected();
+        
         if ($request->isMethod('POST') AND  $form->handleRequest($request)->isValid()){
-            dump($form->getData());
-            exit;
-            $this->entityManager->persist($film);
-            $this->entityManager->flush();
+            $filmManager->addFilm($film);
+   
 
             $request->getSession()->getFlashBag()
                 ->add('info', 'Le film à bien été ajouté.');
         }
 
         return $this->render('admin/admin_films.html.twig',[
-            'form'  =>  $form->createView(),
+            'form'  =>  $form->createView(), "listFilms" => $listFilms , "listFilmsSelected" => $listFilmsSelected
         ]);
     }
 
@@ -94,11 +105,100 @@ class AdminController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function adminUsersAction()
+    public function adminUsersAction(Request $request , UserManager $userManager)
     {
-        return $this->render('admin/admin_users.html.twig');
+        $listUsersBanned = $userManager->getUsersBanned();
+        $listUsers = $userManager->getAllUsersNotBanned();
+        
+        $user = new User();
+        $form = $this->createForm(UserType::class , $user);
+        $form->handleRequest($request);
+       
+        
+        if($form->isValid())
+        {
+            $userManager->addUser($user);
+        }
+        
+        return $this->render('admin/admin_users.html.twig' , array("form" => $form->createView() , "listUsersBanned" => $listUsersBanned , "listUsers" => $listUsers));
     }
 
+    /**
+     * @Route("/admin/unban/{idUser}", name="unban")
+     *
+     */
+    public function adminUnbanAction(UserManager $userManager , $idUser)
+    {
+        $user = $userManager->getUserById($idUser);
+        $userManager->unBanUser($user);
+//         return new Response("Débannir !");
+        return $this->redirectToRoute('admin_users');
+//         return $this->render('admin/admin_categories.html.twig');
+    }
+    
+    /**
+     * @Route("/admin/modificationFilm/{idFilm}", name="modificationFilm")
+     *
+     */
+    public function adminModifFilmAction(FilmManager $filmManager , $idFilm)
+    {
+       
+        return $this->redirectToRoute('admin_films');
+    }
+    
+    /**
+     * @Route("/admin/deleteFilm/{idFilm}", name="deleteFilm")
+     *
+     */
+    public function adminDeleteFilmAction(FilmManager $filmManager , $idFilm)
+    {
+        $film = $filmManager->getFilmById($idFilm);
+       
+        $filmManager->deleteFilm($film);
+        
+        return $this->redirectToRoute('admin_films');
+        //         return $this->render('admin/admin_categories.html.twig');
+    }
+    
+    /**
+     * @Route("/admin/notSelectedFilm/{idFilm}", name="notSelectedFilm")
+     *
+     */
+    public function adminNotSelectedFilmAction(FilmManager $filmManager , $idFilm)
+    {
+        $film = $filmManager->getFilmById($idFilm);
+        $filmManager->notSelectedFilm($film);
+        return $this->redirectToRoute('admin_films');
+        
+    }
+    
+    /**
+     * @Route("/admin/isSelectedFilm/{idFilm}", name="isSelectedFilm")
+     *
+     */
+    public function adminIsSelectedFilmAction(FilmManager $filmManager , $idFilm)
+    {
+        $film = $filmManager->getFilmById($idFilm);
+        $filmManager->isSelectedFilm($film);
+        return $this->redirectToRoute('admin_films');
+        
+    }
+    
+    
+    /**
+     * @Route("/admin/ban/{idUser}", name="ban")
+     *
+     */
+    public function adminBanAction(UserManager $userManager , $idUser)
+    {
+        
+        $user = $userManager->getUserById($idUser);
+        $userManager->banUser($user);
+//         return new Response("Bannir !");
+        return $this->redirectToRoute('admin_users');
+      
+    }
+    
     /**
      * @Route("/admin/categories", name="admin_categories")
      *

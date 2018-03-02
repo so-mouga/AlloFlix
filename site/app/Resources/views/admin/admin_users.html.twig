@@ -1,13 +1,72 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
 {% block body %}
-    <p> admin user </p>
-    <input type="text" id="find_user">
-    <span id="path_user_search" style="display:none">{{ path('user_search') }}</span>
 
+	{{ form_start(form) }}
+		<h1> Ajouter un utilisateur </h1>
+		<div> 
+		{{ form_label(form.pseudo) }}
+		{{ form_widget(form.pseudo ,{ 'attr' : { 'label' : 'Ajouter'} } ) }} 
+		</div>
+		
+		<div>
+		{{ form_label(form.email) }}
+		 {{ form_widget(form.email) }} 
+		 </div>
+		<div>
+		{{ form_label(form.password) }}
+		 {{ form_widget(form.password) }} 
+		 </div>
+		<div>
+		{{ form_widget(form.create ,{ 'attr' : { 'label' : 'Ajouter'} } ) }} 
+		</div>
+	
+	{{ form_end(form) }}
+    <h1> Liste des Utilisateurs </h1>
+    <table style="text-align: center";>
+    	<tr>
+    		<div style="background-color: #4CAF50; color:white">
+        		<td> Pseudo </td>
+        		<td> Mail </td>
+        		<td> Action </td>
+    		</div>
+    	</tr>
+    {% for user in listUsers %}
+    	<tr>
+    		<td> {{  user.pseudo }} </td>
+    		<td> {{ user.email }}</td>
+    		<td> 
+    		
+    		<a href="{{ path('ban', {'idUser': user.id}) }}">
+    			<button style="background: red;color:white;" > Bannir </button>
+    		</a> 
+    		
+    		</td>
+    	</tr>
+	{% endfor %}  
+	</table>  
+	
+    <h1> Liste des utilisateurs bannis </h1>
+    
+    <table style="text-align: center";>
+    	<tr>
+    		<div style="background-color: #4CAF50; color:white">
+        		<td> Pseudo </td>
+        		<td> Mail </td>
+        		<td> Action </td>
+    		</div>
+    	</tr>
+    {% for userBanned in listUsersBanned %}
+    	<tr>
+    		<td> {{ userBanned.pseudo }} </td>
+    		<td> {{ userBanned.email }} </td>
+    		<td> 
+    		<a href="{{ path('unban', {'idUser': userBanned.id}) }}">
+    			<button style="background: green;color:white;"> Débannir </button> 
+    		</a>
+    		</td>
+    	</tr>
+	{% endfor %}  
+	</table> 
+    
 {% endblock %}
-
-{% block javascripts %}
-    <script src="{{ asset('js/search_admin.js') }}" type="text/javascript"></script>
-{% endblock %}
-

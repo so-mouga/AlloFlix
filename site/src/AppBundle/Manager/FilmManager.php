@@ -10,13 +10,12 @@ use AppBundle\Entity\Producer;
 use AppBundle\Entity\Saga;
 use AppBundle\Entity\User;
 use Symfony\Component\Validator\Constraints\DateTime;
-
 use Doctrine\ORM\EntityManagerInterface;
 
 
 /**
  * Created by PhpStorm.
- * User: quach
+ * User: all
  * Date: 26/02/18
  * Time: 15:11
  */
@@ -120,17 +119,19 @@ class FilmManager
      * @param \DateTime $releaseAt
      * @return bool
      */
-    public function addFilm(string $name, string $description, string $link, string $image, bool $isSelected, \DateTime $releaseAt) :bool{
-        $film = new Film();
-        $film->setName($name)
-            ->setDescription($description)
-            ->setLink($link)
-            ->setImage($image)
-            ->setIsSelected($isSelected)
-            ->setReleaseAt($releaseAt);
+    public function addFilm($film)
+    {
         $this->em->persist($film);
         $this->em->flush();
         return true;
+    }
+    
+    public function getFilms()
+    {
+     
+        $allFilms = $this->filmRepository->findAll();
+        return $allFilms;
+        
     }
 
     /**
@@ -140,6 +141,28 @@ class FilmManager
         return $this->em->getRepository(Film::class)
             ->findByIsSelected(true);
     }
+    
+    
+    public function deleteFilm($film)
+    {
+        
+        $this->em->remove($film);
+        $this->em->flush();
+    }
+    
+    public function notSelectedFilm($film)
+    {
+        $film->setIsSelected(0);
+        $this->em->persist($film);
+        $this->em->flush();
+    }
+    
+    public function isSelectedFilm($film)
+    {
+        $film->setIsSelected(1);
+        $this->em->persist($film);
+        $this->em->flush();
+    }
 
     /**
      * @param string $name
@@ -148,28 +171,6 @@ class FilmManager
     public function getFilmByName(string $name) : array{
         return $this->em->getRepository(Film::class)
             ->findByName($name);
-    }
-
-
-    /**
-     * @param array $comment
-     * @param Film $film
-     * @return int
-     */
-    public function getRateByFilm(Film $film) : ?int
-    {
-        $comments = $film->getComments();
-            $rate = 0;
-            foreach ($comments as $comment){
-                $rate += $comment->getNote();
-            }
-            if(count($comments) == 0){
-                return null;
-            }
-            else{
-                return round($rate / count($comments),1);
-            }
-
     }
 
     /**
@@ -195,7 +196,7 @@ class FilmManager
     public function getFilmByCreatedAt() : array{
         $films = $this->em->getRepository(Film::class)->findBy(
             [],
-            ['createdAt'=>'DESC']
+            ['createdAt'=>'DESC'] , 9
         );
         /*$query = $this->em->createQueryBuilder()
             ->select('f')
@@ -208,8 +209,8 @@ class FilmManager
         return $query;*/
         return $films;
     }
-
-    /**
+  
+  /**
      * @param string $search
      * @return array
      */
@@ -306,4 +307,27 @@ class FilmManager
 
         return true;
     }
+  
+  /**
+     * @param array $comment
+     * @param Film $film
+     * @return int
+     */
+    public function getRateByFilm(Film $film) : ?int
+    {
+        $comments = $film->getComments();
+            $rate = 0;
+            foreach ($comments as $comment){
+                $rate += $comment->getNote();
+            }
+            if(count($comments) == 0){
+                return null;
+            }
+            else{
+                return round($rate / count($comments),1);
+            }
+
+    }
+    
+    
 }

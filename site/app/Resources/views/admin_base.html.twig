@@ -6,17 +6,23 @@
     {% block stylesheets %}
         <script type="text/javascript" src="{{ "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" }}"></script>
         <script type="text/javascript" src="{{ "http://ajax.microsoft.com/ajax/jquery.ui/1.8.10/jquery-ui.js" }}"></script>
-        <link rel="stylesheet" href="{{ asset('css/base_admin.css') }}" />
+      
+        <link rel="stylesheet" href="{{ asset('css/baseAdmin.css') }}" /> 
         <link rel="stylesheet" href="{{ asset('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css') }}" />
     {% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 </head>
 <body>
-
+<div class="top_barre">
+            {% include 'include/top_barre.html.twig' %}
+        </div>
+          {% include 'include/left_barre.html.twig' %}
+          <div>
 {% block body %}{% endblock %}
-
+</div>
 {% block javascripts %}
 {% endblock %}
 
 </body>
 </html>
+

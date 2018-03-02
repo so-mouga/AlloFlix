@@ -1,9 +1,72 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
 {% block body %}
-    <p> admin film </p>
+    
     <div class="form">
         {{ form(form) }}
     </div>
+    
+    <h1> Liste des Films </h1>
+    <table style="text-align: center";>
+    	<tr>
+    		<div style="background-color: #4CAF50; color:white">
+        		<td> Nom </td>
+        		<td> Description </td>
+        		<td> Action </td>
+    		</div>
+    	</tr>
+    {% for film in listFilms %}
+    	<tr>
+    		<td> {{  film.name }} </td>
+    		<td> {{ film.description }}</td>
+    		<td> 
+    		{% if film.isSelected == 0 %}
+    			<a href="{{ path('isSelectedFilm', {'idFilm': film.id}) }}">
+    			<button style="background: green;color:white;" > Ajouter à la selection </button>
+    		</a> 
+    		{% else %}
+    		<button style="background: grey;color:white;" > Dans la selection </button>
+    		{% endif %}
+    		
+    		
+    		<a href="{{ path('modificationFilm', {'idFilm': film.id}) }}">
+    			<button style="background: green;color:white;" > Modifier </button>
+    		</a> 
+    		<a href="{{ path('deleteFilm', {'idFilm': film.id}) }}">
+    			<button style="background: red;color:white;" > Supprimer </button>
+    		</a> 
+    		
+    		</td>
+    	</tr>
+	{% endfor %}
+	
+	</table>   
+	
+	<h1> Notre selection </h1>
+	
+    <table style="text-align: center";>
+    	<tr>
+    		<div style="background-color: #4CAF50; color:white">
+        		<td> Nom </td>
+        		<td> Description </td>
+        		<td> Action </td>
+    		</div>
+    	</tr>
+    {% for filmSelected in listFilmsSelected %}
+    	<tr>
+    		<td> {{  filmSelected.name }} </td>
+    		<td> {{ filmSelected.description }}</td>
+    		<td> 
+    		
+    		
+    		<a href="{{ path('notSelectedFilm', {'idFilm': filmSelected.id}) }}">
+    			<button style="background: red;color:white;" > Retirer </button>
+    		</a> 
+    		
+    		</td>
+    	</tr>
+	{% endfor %}   
+	
+	</table>
 {% endblock %}
 

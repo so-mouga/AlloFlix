@@ -15,20 +15,16 @@ use AppBundle\Manager\CommentManager;
 use AppBundle\Manager\FilmManager;
 use AppBundle\Manager\SagaManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class FilmController extends Controller
 {
-    /**
-     * @var FilmManager
-     */
     private $manager;
-
     /**
      * @var SagaManager
      */
@@ -84,7 +80,6 @@ class FilmController extends Controller
         if (null === $film) {
             throw new NotFoundHttpException("La page n'existe pas");
         }
-
         $notes = $this->manager->getRateByFilm($film);
         $filmHeart = $this->manager->getFilmHeartByUser($this->getUser(), $film);
         $filmWatchLater = $this->manager->getFilmWatchLaterByUser($this->getUser(), $film);
@@ -102,10 +97,11 @@ class FilmController extends Controller
         $form = $this->createForm(CommentType::class,$comment);
 
         if ($request->isMethod('POST') AND  $form->handleRequest($request)->isValid()){
+
             $this->commentManager->addComment($comment);
         }
 
-        return $this->render('film/film.html.twig',[
+            return $this->render('film/film.html.twig',[
                 'myFilm'         =>  $film,
                 'form'           =>  $form->createView(),
                 'myComment'      =>  $commentUser,
@@ -116,7 +112,7 @@ class FilmController extends Controller
     }
 
     /**
-     * @Route("/film/playlist_heart", name="film_heart")
+    * @Route("/film/playlist_heart", name="film_heart")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -138,7 +134,6 @@ class FilmController extends Controller
             'filmsWait' =>  $this->getUser()->getListFilmWatchLater()->getValues()
         ]);
     }
-
     /**
      * SearchFilmAction
      *
@@ -245,4 +240,3 @@ class FilmController extends Controller
         ]);
     }
 }
-
