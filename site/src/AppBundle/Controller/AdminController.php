@@ -6,10 +6,7 @@
  * Time: 16:33
  */
 
-class AdminController extends Controller
-{
-  
-  
+
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Category;
@@ -17,23 +14,24 @@ use AppBundle\Entity\Film;
 use AppBundle\Entity\Producer;
 use AppBundle\Entity\Saga;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Actor;
 use AppBundle\Form\CategoryType;
 use AppBundle\Form\FilmType;
 use AppBundle\Form\ProducerType;
 use AppBundle\Form\SagaType;
-use AppBundle\Manager\ActorManager;
-use AppBundle\Entity\Actor;
 use AppBundle\Form\ActorType;
+use AppBundle\Form\UserType;
+use AppBundle\Manager\ActorManager;
 use AppBundle\Manager\CategoryManager;
 use AppBundle\Manager\FilmManager;
 use AppBundle\Manager\UserManager;
 use AppBundle\Manager\ProducerManager;
 use AppBundle\Manager\SagaManager;
-use AppBundle\Manager\UserManager;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+
 
 class AdminController extends Controller
 {
