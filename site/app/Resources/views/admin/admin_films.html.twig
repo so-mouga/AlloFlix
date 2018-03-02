@@ -1,19 +1,18 @@
 {% extends 'admin_base.html.twig' %}
 
 {% block body %}
-    
+<div class="well">
     <div class="form">
         {{ form(form) }}
     </div>
-    
+</div>
+<div class="container">
     <h1> Liste des Films </h1>
     <table style="text-align: center";>
     	<tr>
-    		<div style="background-color: #4CAF50; color:white">
-        		<td> Nom </td>
-        		<td> Description </td>
-        		<td> Action </td>
-    		</div>
+			<td> Nom </td>
+			<td> Description </td>
+			<td> Action </td>
     	</tr>
     {% for film in listFilms %}
     	<tr>
@@ -46,11 +45,9 @@
 	
     <table style="text-align: center";>
     	<tr>
-    		<div style="background-color: #4CAF50; color:white">
-        		<td> Nom </td>
-        		<td> Description </td>
-        		<td> Action </td>
-    		</div>
+			<td> Nom </td>
+			<td> Description </td>
+			<td> Action </td>
     	</tr>
     {% for filmSelected in listFilmsSelected %}
     	<tr>
@@ -68,5 +65,6 @@
 	{% endfor %}   
 	
 	</table>
+</div>
 {% endblock %}
 

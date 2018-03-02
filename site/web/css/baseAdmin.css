@@ -1,16 +1,39 @@
-td , tr 
-{
+table {
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
+	background-color: white;
 
-	border-bottom: 1px solid #ddd;
-	padding: 15px;
-	
+}
+
+td, th {
+	border: 1px solid #dddddd;
+	text-align: left;
+	padding: 8px;
+}
+
+tr:nth-child(even) {
+	background-color: #dddddd;
+}
+
+nav ul
+{
+	list-style-type: none;
 }
 
 
-table
+.top_barre
 {
-	height: 200px; 
-	width: 40%; 
-	overflow:auto; 
-	border-bottom:1px solid black;
+	height: 60px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-right: 20px;
+	padding-left: 20px;
+	background-color: black;
+}
+
+.content-admin
+{
+	width: 100%;
 }

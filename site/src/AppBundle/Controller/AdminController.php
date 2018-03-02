@@ -6,7 +6,6 @@
  * Time: 16:33
  */
 
-
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Category;
@@ -31,7 +30,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-
 
 class AdminController extends Controller
 {
@@ -75,7 +73,8 @@ class AdminController extends Controller
      * @Route("/admin/films", name="admin_films")
      *
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param FilmManager $filmManager
+     * @return Response
      */
     public function adminFilmsAction(Request $request , FilmManager $filmManager)
     {
@@ -129,9 +128,8 @@ class AdminController extends Controller
     {
         $user = $userManager->getUserById($idUser);
         $userManager->unBanUser($user);
-//         return new Response("Débannir !");
+
         return $this->redirectToRoute('admin_users');
-//         return $this->render('admin/admin_categories.html.twig');
     }
     
     /**
@@ -195,16 +193,6 @@ class AdminController extends Controller
 //         return new Response("Bannir !");
         return $this->redirectToRoute('admin_users');
       
-    }
-    
-    /**
-     * @Route("/admin/categories", name="admin_categories")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function adminCategoriesAction()
-    {
-        return $this->render('admin/admin_categories.html.twig');
     }
 
     /**
