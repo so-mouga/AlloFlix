@@ -2,10 +2,7 @@
 
 {% block body %}
     <div class="well">
-        {% for message in app.session.flashbag.get('info') %}
-            <p>Message flash : {{ message }}</p>
-        {% endfor %}
-
+        {% include 'include/flash_message.html.twig' %}
         <p> admin Producer </p>
         {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
 
