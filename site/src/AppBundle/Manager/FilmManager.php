@@ -328,6 +328,26 @@ class FilmManager
             }
 
     }
-    
-    
+
+    /**
+     * @param $filmName
+     * @return array|null
+     */
+    public function getFilmByFirstLetter($filmName) :?array
+    {
+        if (strlen($filmName) < 3){
+            return null;
+        }
+        $query = $this->em->createQueryBuilder()
+            ->select('f')
+            ->from(Film::class, 'f')
+            ->where('f.name LIKE :name')
+            ->setParameter('name', $filmName.'%')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return $query;
+    }
 }

@@ -24,7 +24,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class FilmController extends Controller
 {
-    private $manager;
+    /**
+     * @var FilmManager
+     */
+    private $filmManager;
     /**
      * @var SagaManager
      */
@@ -38,9 +41,9 @@ class FilmController extends Controller
      */
     private $categoryManager;
 
-    public function __construct(FilmManager $manager, SagaManager $sagaManager, CommentManager $commentManager, CategoryManager $categoryManager)
+    public function __construct(FilmManager $filmManager, SagaManager $sagaManager, CommentManager $commentManager, CategoryManager $categoryManager)
     {
-        $this->manager = $manager;
+        $this->filmManager = $filmManager;
         $this->sagaManager = $sagaManager;
         $this->commentManager = $commentManager;
         $this->categoryManager = $categoryManager;
@@ -58,7 +61,7 @@ class FilmController extends Controller
         $categories = $this->categoryManager->getAllCategories();
         $notes = $this->commentManager::NOTES;
 
-        $data = $this->manager->getAllFilms($idPage, $nbPerPage);
+        $data = $this->filmManager->getAllFilms($idPage, $nbPerPage);
         return $this->render('film/list_films.html.twig', [
             'listFilms'  => $data[0],
             'nbPages'    => $data[1],
@@ -75,14 +78,14 @@ class FilmController extends Controller
      */
     public function filmAction(Request $request, $filmID)
     {
-        $film = $this->manager->getFilmById($filmID);
+        $film = $this->filmManager->getFilmById($filmID);
 
         if (null === $film) {
             throw new NotFoundHttpException("La page n'existe pas");
         }
-        $notes = $this->manager->getRateByFilm($film);
-        $filmHeart = $this->manager->getFilmHeartByUser($this->getUser(), $film);
-        $filmWatchLater = $this->manager->getFilmWatchLaterByUser($this->getUser(), $film);
+        $notes = $this->filmManager->getRateByFilm($film);
+        $filmHeart = $this->filmManager->getFilmHeartByUser($this->getUser(), $film);
+        $filmWatchLater = $this->filmManager->getFilmWatchLaterByUser($this->getUser(), $film);
 
         $comment = new Comment();
         $comment->setUser($this->getUser());
@@ -141,7 +144,7 @@ class FilmController extends Controller
      */
     public function searchFilmAction(Request $request){
         $word = $request->query->get('search');
-        $films = $this->manager->searchFilm($word);
+        $films = $this->filmManager->searchFilm($word);
         $items = array();
         $response = new JsonResponse();
         foreach ($films as $film){
@@ -163,19 +166,19 @@ class FilmController extends Controller
     {
         $loveUserFilm = $request->request->get('love');
         $filmId = $request->request->get('filmId');
-        $film = $this->manager->getFilmById($filmId);
+        $film = $this->filmManager->getFilmById($filmId);
 
         if (empty($film)) {
             return new JsonResponse(['message' => 'film no found'], Response::HTTP_NOT_FOUND);
         }
 
         if ($loveUserFilm == 'true'){
-            $this->manager->addFilmHeart($film, $this->getUser());
+            $this->filmManager->addFilmHeart($film, $this->getUser());
             $love = true;
         }
 
         if ($loveUserFilm == 'false'){
-            $this->manager->removeFilmHeart($film, $this->getUser());
+            $this->filmManager->removeFilmHeart($film, $this->getUser());
             $love = false;
         }
         return new JsonResponse(['data' =>  $filmId, 'love' => $love]);
@@ -190,19 +193,19 @@ class FilmController extends Controller
     {
         $watchUserFilm = $request->request->get('later');
         $filmId = $request->request->get('filmId');
-        $film = $this->manager->getFilmById($filmId);
+        $film = $this->filmManager->getFilmById($filmId);
 
         if (empty($film)) {
             return new JsonResponse(['message' => 'film no found'], Response::HTTP_NOT_FOUND);
         }
 
         if ($watchUserFilm == 'true'){
-            $this->manager->addFilmWatch($film, $this->getUser());
+            $this->filmManager->addFilmWatch($film, $this->getUser());
             $watch = true;
         }
 
         if ($watchUserFilm == 'false'){
-            $this->manager->removeFilmWatch($film, $this->getUser());
+            $this->filmManager->removeFilmWatch($film, $this->getUser());
             $watch = false;
         }
         return new JsonResponse(['data' =>  $filmId, 'watch' => $watch]);
@@ -216,7 +219,7 @@ class FilmController extends Controller
     public function filmTopBarreAction(Request $request)
     {
         $nameFilm = $request->request->get('film_name');
-        $film = $this->manager->getFilmByName($nameFilm);
+        $film = $this->filmManager->getFilmByName($nameFilm);
 
         if (!empty($film)) {
             return $this->redirectToRoute('film',[
@@ -235,8 +238,11 @@ class FilmController extends Controller
      */
     public function filmNoFoundAction($filmName)
     {
+        $films = $this->filmManager->getFilmByFirstLetter($filmName);
+
         return $this->render('film/film_no_found.html.twig', [
-            'filmName' => $filmName
+            'filmName'        => $filmName,
+            'filmFoundByName' => $films
         ]);
     }
 }

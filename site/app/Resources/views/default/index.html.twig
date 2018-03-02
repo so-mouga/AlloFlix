@@ -4,16 +4,19 @@
     <div class="film-selected">
         <h2>Notre selection de film</h2>
 
-        <div class="list-recently" style="height: 230px; overflow: auto;     width: 100%;
+        {% if listFilmSelected is empty %}
+            <p>Nous n'avons pas encore mis de film dans notre selection soyez patient ;).</p>
+        {% else %}
+            <div class="list-recently" style="height: 230px; overflow: auto;     width: 100%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     padding: 0px;">
-            {%  for film in listFilmSelected %}
-                {% include 'include/film_block.html.twig' %}
-            {% endfor %}
-        </div>
-
+                {%  for film in listFilmSelected %}
+                    {% include 'include/film_block.html.twig' %}
+                {% endfor %}
+            </div>
+        {% endif %}
 
     </div>
     <div class="film-recently">

@@ -110,7 +110,7 @@ class AdminController extends Controller
         $user = new User();
         $form = $this->createForm(UserType::class , $user);
         $form->handleRequest($request);
-       
+        $userManager->encodePasswordUser($user);
         
         if($form->isValid())
         {
