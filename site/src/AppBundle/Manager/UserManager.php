@@ -75,6 +75,21 @@ class UserManager
     {
         return $this->entityManager->getRepository(User::class)->findByIsBanished(0);
     }
+    
+    public function changeInfo($user , $email)
+    {
+        $user->setEmail($email);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+    }
+    
+    public function changePassword($user , $password)
+    {
+        $newPassword = password_hash($password, PASSWORD_BCRYPT);
+        $user->setPassword($newPassword);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+    }
 
     /**
      * @param String $pseudo

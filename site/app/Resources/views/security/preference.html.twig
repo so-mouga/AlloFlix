@@ -1,6 +1,43 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <p> preference </p>
+    <h1> Profil </h1>
+    
+    
+    <div style="display:flex">
+        <div>
+            {{ form_start(formInfo, {'attr': {'class': 'form-horizontal'}} )}}
+
+            <fieldset>
+                <legend> Informations personnelles </legend>
+                {{ form_widget(formInfo.pseudo , { 'attr' : { 'value' : user.pseudo , 'disabled' : 'disabled' }}) }}
+                {{ form_widget(formInfo.email , { 'attr' : { 'value' : user.email }}) }}
+                {{ form_widget(formInfo.password) }}
+                {{ form_widget(formInfo.changeInfo , { 'attr' : { 'class' : 'login' }}) }}
+            </fieldset>
+            {{ form_rest(formInfo) }}
+            {{ form_end(formInfo) }}
+
+            
+        </div>
+        
+        <div>
+            {{ form_start(formPassword, {'attr': {'class': 'form-horizontal'}} )}}
+
+            <fieldset>
+                <legend> Mot de passe </legend>
+                {{ form_widget(formPassword.newPassword) }}
+                {{ form_widget(formPassword.confirmNewPassword) }}
+                {{ form_widget(formPassword.password) }}
+                {{ form_widget(formPassword.changePassword , { 'attr' : { 'class' : 'login' }}) }}
+            </fieldset>
+            {{ form_rest(formPassword) }}
+            {{ form_end(formPassword) }}
+
+            
+        </div>
+    </div>
+    
+    
 {% endblock %}
 

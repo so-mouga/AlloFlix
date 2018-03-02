@@ -8,17 +8,17 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Actor;
 use AppBundle\Entity\Category;
 use AppBundle\Entity\Film;
 use AppBundle\Entity\Producer;
 use AppBundle\Entity\Saga;
 use AppBundle\Entity\User;
-use AppBundle\Entity\Actor;
+use AppBundle\Form\ActorType;
 use AppBundle\Form\CategoryType;
 use AppBundle\Form\FilmType;
 use AppBundle\Form\ProducerType;
 use AppBundle\Form\SagaType;
-use AppBundle\Form\ActorType;
 use AppBundle\Form\UserType;
 use AppBundle\Manager\ActorManager;
 use AppBundle\Manager\CategoryManager;

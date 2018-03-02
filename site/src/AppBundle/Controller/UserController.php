@@ -8,6 +8,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\User;
+use AppBundle\Form\UserChangeInfoType;
+use AppBundle\Form\UserChangePasswordType;
+use AppBundle\Form\UserType;
 use AppBundle\Manager\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -27,9 +31,36 @@ class UserController extends Controller
     /**
      * @Route("/preference", name="preference")
      */
-    public function preferenceAction()
+    public function preferenceAction(Request $request , UserManager $userManager)
     {
-        return $this->render('security/preference.html.twig');
+        $userInfo = new User();
+        $formInfo = $this->createForm(UserChangeInfoType::class , $userInfo);
+        $formInfo->handleRequest($request);
+        
+        $userPassword = new User();
+        $formPassword = $this->createForm(UserChangePasswordType::class , $userPassword);
+        $formPassword->handleRequest($request);
+        
+        $userSession = $this->getUser();
+        
+        if($formInfo->isValid())
+        {
+            if(password_verify($userSession->getPassword() , $userInfo->getPassword()))
+            {
+                $userManager->changeInfo($userSession , $userInfo->getEmail());
+            }
+        }
+        if($formPassword->isValid())
+        {
+            if($formPassword->get('newPassword')->getData() == $formPassword->get('confirmNewPassword')->getData() AND 
+                password_verify($userSession->getPassword() , $userPassword->getPassword()) == true)
+            {
+                $userManager->changePassword($userSession , $formPassword->get('newPassword')->getData());
+            }
+        }
+        
+        return $this->render('security/preference.html.twig' , array("formInfo" => $formInfo->createView() , "formPassword" => $formPassword->createView() ,
+            "user" => $userSession));
     }
 
     /**
