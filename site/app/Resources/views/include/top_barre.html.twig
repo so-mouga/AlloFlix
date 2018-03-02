@@ -10,7 +10,10 @@
 
 
 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-    <a href="{{ path('preference') }}">Mon compte</a>
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('admin_films')}}">Administration</a>
+    {% endif %}
+        <a href="{{ path('preference') }}">Mon compte</a>
     <a href="{{ path('logout') }}">Déconnexion</a>
 {% else %}
     <a href="{{ path('login')}}">connexion</a>
