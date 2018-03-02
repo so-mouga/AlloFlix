@@ -6,7 +6,7 @@
             <h2> {{ myFilm.name }}</h2>
             <div class="film-description" style="display: flex; width: 300px; justify-content: space-between; align-items: center;">
                 <p class="grey">{{ myFilm.createdAt|date("m/Y") }}</p>
-                <div id="heart_action" >
+                <div id="heart_action" style=" cursor: pointer;">
                     {% if filmHeart == true %}
                         <img class="love_film" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIhSURBVFhH7Zg/SxxRFMVvupBYJB9Ao61RGwUx+8ci2MXagDaC+BHEIH4JQQhpFEkhtvoF7A1YCPnTiSaE2IgoItGZ/O5wkWX3vv3j7owLmQOHnXnv3nPOm3nMDCs5cuT4XxBPytPojYxFBZmOSlKOC9IXizyx6SC0JpqQV9qT9KKhWjbdPhB9HZdkJyrKJb9xJTH9zvhSPCrPrPwe0ZQ81zn4o6YPLbgNB628dSQrL8kqvKs2qCY13+KijFqrJFea8F5tJQl4C1eauRM1wGDdEw2R+ouoLMMYjnB85dWESP2a2TYHTOY8oUak70TpzTUiIWfNvj5s7/zyRNIkAX96e7kGhHvvCWRBQs5YjDAo2vKaM2FRNi1GGFzBfbc5A6q3xQiDwoPqxgx5YDHCYBV7TmMmZHvtWowwKFyubsyQyxYjDFYxwFX86zSnSvVUb4tRHxR/9ETSJOE+mX1j8LXxgoZjTygN4nXKI+al2TcHe6+eeYKdJOGu8Bk329agjazs3BPuBJNwZZkyu4cBgQmC/vYM2iHh/qBbMJv2gFgvYl88o4cQvUP2eb/Jdwb6pUHIz55hK0Rjm3A9Jtt5YDCve8czr0f6rtnPiyaTLqJJGSLkkRfEI+G+6lPB2rOB3fINL1Alk5o0b2kjJLfceTXqGFd5wcoeF4R5V7kv9VjHbLo7QKC3BLtJyLENdxcItkLAD3bafdC/NJR2miNHjhwi8g+LjCGk7X2qQwAAAABJRU5ErkJggg==">
                     {% else %}
@@ -14,7 +14,7 @@
                     {% endif %}
                 </div>
 
-                <div id="watch_later_action" >
+                <div id="watch_later_action" style=" cursor: pointer;">
                     {% if filmWatchLater == true %}
                         <img class="film_watch_later" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFYSURBVFhH7dO7S8NAHMDxuPgf+C/ZBJNW8DGLbuLSv8BJappU0MXXooNuDi7OUtBegkGUxkVFRJcKgtA88FHPRu8npWhrTq534n3h4F4cHwhRZDLZHypTQDkF4z6yFKushZZUs9LIlpxV4ZAJbmLlODi6ifHU+mkgFBJwfu0JXz284rO7Zzy5dhIYNlomV/jVjkuGdxvj8UU31C2U/7jFKYmjTeJokzja/h9OnSsPkOmvYoLTipURrYjiQfNAJ1tUMcMNLzjhtlPDhu1GqnVokKNUsfms82g0wZUv6+8P7p/XqZDMfgjddnamN6rRxX3j8+G0SGa4pLHZan+u5Ozlt/ywHdncD7shmeIgWmRPcFBaZE9x0E+RXHBQN2QTsMsNB3VCzmz6j1xx0HfI1uHxwkGdkB5vHPQV0hMFB7Ui3etILBwESM1EL8LhoASZKaAhspTJZHxTlDc17GsTXkWYNAAAAABJRU5ErkJggg==">
                     {% else %}
@@ -28,6 +28,7 @@
                     <p>{{ noteMovie }}/10</p>
                 {% endif %}
             </div>
+            <h2>Description</h2>
             <p>{{ myFilm.description }}</p>
 
         </div>
