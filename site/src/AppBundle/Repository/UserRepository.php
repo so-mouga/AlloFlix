@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\User;
+
 /**
  * UserRepository
  *
@@ -10,4 +12,20 @@ namespace AppBundle\Repository;
  */
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param string $search
+     * @return array
+     */
+    public function searchUser(string $search){
+
+        $query = $this->createQueryBuilder('search')
+            ->select('u')
+            ->from(User::class, 'u')
+            ->where('u.pseudo LIKE :word')
+            ->setParameter('word','%'.$search.'%')
+            ->getQuery()
+            ->getResult()
+        ;
+        return $query;
+    }
 }

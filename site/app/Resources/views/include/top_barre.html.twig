@@ -3,8 +3,11 @@
 <a href="{{ path('films', {'idPage': 1}) }}">Films</a>
 <a href="{{ path('film_heart')}}">Mes coups de coeur</a>
 <a href="{{ path('film_later')}}">à regarder plus tard</a>
-<input type="text" id="find_film">
-<input type="submit" class="btn-search">
+<form action="{{ path('search_film_top') }}" method="post">
+    <input type="text" id="find_film" name="film_name">
+    <input type="submit" class="btn-search">
+</form>
+
 
 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
     <a href="{{ path('preference') }}">Mon compte</a>
@@ -16,3 +19,5 @@
 {% block javascripts %}
     <script src="{{ asset('js/top_barre.js') }}" type="text/javascript"></script>
 {% endblock %}
+
+<span id="path_film_search" style="display:none">{{ path('film_search') }}</span>

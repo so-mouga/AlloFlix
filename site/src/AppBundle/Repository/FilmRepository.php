@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
+use AppBundle\Entity\Film;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
@@ -11,6 +12,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class FilmRepository extends \Doctrine\ORM\EntityRepository
 {
+
     public function getAllFilm(int $page,int $nbPerPage)
     {
         $query = $this->createQueryBuilder('f')->getQuery();
@@ -19,5 +21,18 @@ class FilmRepository extends \Doctrine\ORM\EntityRepository
         ->setMaxResults($nbPerPage);
 
         return new Paginator($query, true);
+    }
+
+    public function searchFilm(string $search){
+
+        $query = $this->createQueryBuilder('search')
+            ->select('f')
+            ->from(Film::class, 'f')
+            ->where('f.name LIKE :word')
+            ->setParameter('word','%'.$search.'%')
+            ->getQuery()
+            ->getResult()
+        ;
+        return $query;
     }
 }

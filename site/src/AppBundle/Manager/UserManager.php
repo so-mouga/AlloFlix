@@ -114,4 +114,13 @@ class UserManager
         $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
+
+    /**
+     * @param string $search
+     * @return array
+     */
+    public function searchUser(string $search) : array{
+        $actors = $this->userRepository->searchUser($search);
+        return $actors;
+    }
 }

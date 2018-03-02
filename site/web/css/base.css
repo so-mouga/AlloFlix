@@ -86,7 +86,7 @@ a:hover
 .pagination
 {
     display: flex;
-    width: 100px;
+    width: 500px;
     justify-content: space-around;
     align-items: center;
 }
@@ -134,4 +134,64 @@ a:hover
 .film-block-two
 {
     margin-top: 50px;
+}
+
+.ui-corner-all{
+    background-color:white;
+    list-style-type: none;
+    border:1px solid lightgray;
+
+}
+.ui-corner-all:hover{
+    color:black;
+}
+
+.ui-autocomplete{
+    width:130px !important;
+    overflow: hidden;
+}
+form {
+    padding:10px;
+    width:400px;
+}
+legend{
+    color:white;
+    font-family:Arial;
+    font-size:30px;
+    margin-bottom:30px;
+}
+fieldset{
+    padding:0 20px 20px 20px;
+    margin-bottom:10px;
+    border:none;
+    }
+label {
+    margin-top:10px;
+    display:block;
+}
+.connexion, .form-control {
+    padding:10px;
+    border:1px solid #F5C5C5;
+    border-radius:5px;
+    width:300px;
+    box-shadow:1px 1px 2px #C0C0C0 inset;
+    font-size: 16px;
+    margin:10px 0 10px 0;
+}
+.login, #appbundle_user_create{
+    border-radius: 6px;
+    font-family: Arial;
+    font-size: 20px;
+    padding: 7px 12px 7px 12px;
+    border-color:#a30d00;
+    text-decoration: none;
+    background-color: #a30d00;
+    color:white;
+    display: block;
+    width: 300px;
+    margin-top:20px;
+}
+
+.login{
+    margin-top:85px;
 }

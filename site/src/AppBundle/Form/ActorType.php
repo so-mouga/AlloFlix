@@ -26,7 +26,7 @@ class ActorType extends AbstractType
             ->add('id', HiddenType::class, [
                 'mapped' => false
             ])
-            ->add('Save', SubmitType::class);
+            ->add('save', SubmitType::class);
     }/**
      * {@inheritdoc}
      */

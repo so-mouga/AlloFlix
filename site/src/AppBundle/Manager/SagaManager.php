@@ -4,6 +4,7 @@ namespace AppBundle\Manager;
 
 use Doctrine\ORM\EntityManagerInterface;
 use AppBundle\Entity\Saga;
+use Symfony\Component\HttpFoundation\Request;
 
 class SagaManager
 {
@@ -65,5 +66,38 @@ class SagaManager
         $this->em->persist($saga);
         $this->em->flush();
         return true;
+    }
+
+    /**
+     * @param Request $request
+     * @param Saga $saga
+     */
+    public function createSaga(Request $request, Saga $saga)
+    {
+        if (null != $request->request->get('appbundle_saga')['id'])
+        {
+            $data = $request->request->get('appbundle_saga');
+            $saga = $this->getSagaById($data['id']);
+            $saga->setLabel($data['label']);
+            $request->getSession()->getFlashBag()->add('info', 'well edited category.');
+        }else {
+            $this->em->persist($saga);
+            $request->getSession()->getFlashBag()->add('info', 'well recorded category.');
+        }
+        $this->em->flush();
+    }
+
+    /**
+     * @param int $id
+     */
+    public function deleteSaga(int $id)
+    {
+        $saga = $this->getSagaById($id);
+
+        if (null === $saga) {
+            throw new NotFoundHttpException("saga d'id ".$id." n'existe pas.");
+        }
+        $this->em->remove($saga);
+        $this->em->flush();
     }
 }
