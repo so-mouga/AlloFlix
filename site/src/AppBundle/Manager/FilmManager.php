@@ -30,7 +30,18 @@ class FilmManager
         $this->em = $entityManager;
         $this->filmRepository = $entityManager->getRepository(Film::class);
     }
-    
+
+    /**
+     * @param $name
+     * @param $description
+     * @param $link
+     * @param $image
+     * @param $releaseAt
+     * @param $saga
+     * @param $actors
+     * @param $producers
+     * @param $categories
+     */
     public function importFilm($name , $description , $link , $image , $releaseAt , $saga , $actors , $producers , $categories)
     {
                 
@@ -38,15 +49,6 @@ class FilmManager
         
         if(empty($film))
         {
-         
-//             $serializer = new Serializer(array(new DateTimeNormalizer()));
-            
-//             $dateAsString = $serializer->normalize(new \DateTime());
-//             $dateRelease = new DateTime();
-//             //$dateRelease = $date->format('d-m-Y');
-// //             dump($dateRelease);
-// //             die();
-
             $dateNow = new DateTime();
 
             $newFilm = new Film();
@@ -77,6 +79,7 @@ class FilmManager
             
         }
     }
+
     /**
      *
      * @param $page
@@ -85,7 +88,8 @@ class FilmManager
      */
     public function getAllFilms(int $page,int $nbPerPage)
     {
-        if ($page < 1) {
+        if ($page < 1)
+        {
             throw $this->createNotFoundException("La page ".$page." n'existe pas.");
         }
         $listFilm = $this->em->getRepository(Film::class)
@@ -111,13 +115,14 @@ class FilmManager
 
     /**
      * To add Film
-     * @param string $name
-     * @param string $description
-     * @param string $link
-     * @param string $image
-     * @param bool $isSelected
-     * @param \DateTime $releaseAt
+     * @param $film
      * @return bool
+     * @internal param string $name
+     * @internal param string $description
+     * @internal param string $link
+     * @internal param string $image
+     * @internal param bool $isSelected
+     * @internal param \DateTime $releaseAt
      */
     public function addFilm($film)
     {
@@ -125,13 +130,22 @@ class FilmManager
         $this->em->flush();
         return true;
     }
-    
+
+    /**
+     * @internal param Film $film
+     */
+    public function editFilm($film)
+    {
+        $this->em->flush();
+    }
+
+    /**
+     * @return array
+     */
     public function getFilms()
     {
-     
         $allFilms = $this->filmRepository->findAll();
         return $allFilms;
-        
     }
 
     /**
@@ -141,22 +155,29 @@ class FilmManager
         return $this->em->getRepository(Film::class)
             ->findByIsSelected(true);
     }
-    
-    
+
+    /**
+     * @param $film
+     */
     public function deleteFilm($film)
     {
-        
         $this->em->remove($film);
         $this->em->flush();
     }
-    
+
+    /**
+     * @param $film
+     */
     public function notSelectedFilm($film)
     {
         $film->setIsSelected(0);
         $this->em->persist($film);
         $this->em->flush();
     }
-    
+
+    /**
+     * @param $film
+     */
     public function isSelectedFilm($film)
     {
         $film->setIsSelected(1);
@@ -182,8 +203,8 @@ class FilmManager
 
         $goodRateFilm = [];
         foreach ($films as $film){
-            //dump($film);
-            if($this->getRateByFilm($film) > $note){
+            if ($this->getRateByFilm($film) > $note)
+            {
                 array_push($goodRateFilm,$film);
             }
         }
