@@ -6,7 +6,6 @@
  * Time: 16:33
  */
 
-
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Category;
@@ -31,7 +30,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-
 
 class AdminController extends Controller
 {
@@ -75,7 +73,8 @@ class AdminController extends Controller
      * @Route("/admin/films", name="admin_films")
      *
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param FilmManager $filmManager
+     * @return Response
      */
     public function adminFilmsAction(Request $request , FilmManager $filmManager)
     {
@@ -99,6 +98,33 @@ class AdminController extends Controller
     }
 
     /**
+     * @Route("/admin/films/modif/{id}", name="admin_films_modif")
+     *
+     * @param Request $request
+     * @param FilmManager $filmManager
+     * @param int $id
+     * @return Response
+     */
+    public function modifFilmsAction(Request $request ,FilmManager $filmManager,int $id)
+    {
+        $film = $filmManager->getFilmById($id);
+        $form = $this->createForm(FilmType::class , $film);
+
+        if ($request->isMethod('POST') AND  $form->handleRequest($request)->isValid()){
+            $filmManager->editFilm($film);
+
+
+            $request->getSession()->getFlashBag()
+                    ->add('info', 'Le film à bien été modifier.');
+            return $this->redirectToRoute('admin_films');
+        }
+
+        return $this->render('admin/admin_films_modif.html.twig',[
+            'form'  =>  $form->createView(),
+        ]);
+    }
+
+    /**
      * @Route("/admin/users", name="admin_users")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -111,7 +137,7 @@ class AdminController extends Controller
         $user = new User();
         $form = $this->createForm(UserType::class , $user);
         $form->handleRequest($request);
-       
+        $userManager->encodePasswordUser($user);
         
         if($form->isValid())
         {
@@ -129,9 +155,8 @@ class AdminController extends Controller
     {
         $user = $userManager->getUserById($idUser);
         $userManager->unBanUser($user);
-//         return new Response("Débannir !");
+
         return $this->redirectToRoute('admin_users');
-//         return $this->render('admin/admin_categories.html.twig');
     }
     
     /**
@@ -195,16 +220,6 @@ class AdminController extends Controller
 //         return new Response("Bannir !");
         return $this->redirectToRoute('admin_users');
       
-    }
-    
-    /**
-     * @Route("/admin/categories", name="admin_categories")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function adminCategoriesAction()
-    {
-        return $this->render('admin/admin_categories.html.twig');
     }
 
     /**

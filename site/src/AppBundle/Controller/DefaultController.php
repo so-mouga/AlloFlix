@@ -18,6 +18,9 @@ class DefaultController extends Controller
         $listFilmCurrent = $filmManager->getFilmByCreatedAt();
         
         
-        return $this->render('default/index.html.twig' , array("listFilmSelected" => $listFilmSelection , "listFilmCurrent" => $listFilmCurrent));
+        return $this->render('default/index.html.twig' , array(
+            "listFilmSelected" => $listFilmSelection ,
+            "listFilmCurrent" => $listFilmCurrent
+        ));
     }
 }

@@ -3,7 +3,7 @@
 security:
 
     encoders:
-        AppBundle\Entity\User: plaintext
+        AppBundle\Entity\User: bcrypt
 
     role_hierarchy:
         ROLE_MARKET:      [ROLE_USER]

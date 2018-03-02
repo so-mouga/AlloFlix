@@ -32,11 +32,17 @@ class UserManager
         $this->encoder = $encoder;
         $this->userRepository = $entityManager->getRepository(User::class);
     }
-    
-    public function addUser($user)
+
+    /**
+     * @param User $user
+     */
+    public function addUser(User $user) :User
     {
+        $user->setRoles(['ROLE_USER']);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
+
+        return $user;
     }
 
     /**
@@ -73,7 +79,7 @@ class UserManager
      */
     public function getAllUsersNotBanned() :array
     {
-        return $this->entityManager->getRepository(User::class)->findByIsBanished(0);
+        return $this->entityManager->getRepository(User::class)->getIsBanished(0);
     }
 
     /**
@@ -116,11 +122,52 @@ class UserManager
     }
 
     /**
+     * @param string $pseudo
+     * @param string $email
+     * @param string $password
+     */
+    public function setUser(string $pseudo, string $email, string $password) :User
+    {
+        $user = new User();
+        $password = $this->encoder->encodePassword($user, $password);
+        $user->setPseudo($pseudo)
+            ->setEmail($email)
+            ->setPassword($password)
+            ->setRoles(['ROLE_USER']);
+
+        return $user;
+
+    }
+
+    /**
      * @param string $search
      * @return array
      */
-    public function searchUser(string $search) : array{
+    public function searchUser(string $search) : array
+    {
         $actors = $this->userRepository->searchUser($search);
         return $actors;
+    }
+
+    /**
+     * encode password user in bcryp
+     *
+     * @param User $user
+     */
+    public function encodePasswordUser(User $user)
+    {
+        $user->setPassword($this->encoder->encodePassword($user, $user->getPassword()));
+    }
+
+    /**
+     * @param User $user
+     * @return User
+     */
+    public function createUser(User $user) :User
+    {
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+        return $user;
     }
 }

@@ -3,40 +3,33 @@
 {% block body %}
     <div class="film-selected">
         <h2>Notre selection de film</h2>
-        
-        {%  for filmSelected in listFilmSelected %}
-        <div style="color:white; display:flex;">
-        
-            <div class="one-film">
-        <a href="{{ path('film', { 'filmID': filmSelected.id }) }}">
-            <img src="{{ filmSelected.image }}" width="250" height="150">
-        </a>
-        <a href="{{ path('film', { 'filmID': filmSelected.id }) }}">
-            <p>{{ filmSelected.name }}</p>
-        </a>
-    	</div>
-        </div>	 
-        {% endfor %}
+
+        {% if listFilmSelected is empty %}
+            <p>Nous n'avons pas encore mis de film dans notre selection soyez patient ;).</p>
+        {% else %}
+            <div class="list-recently" style="height: 230px; overflow: auto;     width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0px;">
+                {%  for film in listFilmSelected %}
+                    {% include 'include/film_block.html.twig' %}
+                {% endfor %}
+            </div>
+        {% endif %}
 
     </div>
     <div class="film-recently">
         <h2>Ajouts récents</h2>
-        	
-        {%  for filmCurrent in listFilmCurrent %}
-         <div style="color:white; display:flex;">
-        
-            <div class="one-film">
-        <a href="{{ path('film', { 'filmID': filmCurrent.id }) }}">
-            <img src="{{ filmCurrent.image }}" width="250" height="150">
-        </a>
-        <a href="{{ path('film', { 'filmID': filmCurrent.id }) }}">
-            <p>{{ filmCurrent.name }}</p>
-        </a>
-    	</div>
-        </div>	      		 
-        {% endfor %}
-        
-
+        <div class="list-recently" style="height: 230px; overflow: auto;     width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0px;">
+            {%  for film in listFilmCurrent %}
+                {% include 'include/film_block.html.twig' %}
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
 
