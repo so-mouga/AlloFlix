@@ -98,6 +98,33 @@ class AdminController extends Controller
     }
 
     /**
+     * @Route("/admin/films/modif/{id}", name="admin_films_modif")
+     *
+     * @param Request $request
+     * @param FilmManager $filmManager
+     * @param int $id
+     * @return Response
+     */
+    public function modifFilmsAction(Request $request ,FilmManager $filmManager,int $id)
+    {
+        $film = $filmManager->getFilmById($id);
+        $form = $this->createForm(FilmType::class , $film);
+
+        if ($request->isMethod('POST') AND  $form->handleRequest($request)->isValid()){
+            $filmManager->editFilm($film);
+
+
+            $request->getSession()->getFlashBag()
+                    ->add('info', 'Le film à bien été modifier.');
+            return $this->redirectToRoute('admin_films');
+        }
+
+        return $this->render('admin/admin_films_modif.html.twig',[
+            'form'  =>  $form->createView(),
+        ]);
+    }
+
+    /**
      * @Route("/admin/users", name="admin_users")
      *
      * @return \Symfony\Component\HttpFoundation\Response

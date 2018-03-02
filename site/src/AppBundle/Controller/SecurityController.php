@@ -48,7 +48,7 @@ class SecurityController extends Controller
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
-        
+
         $userManager->encodePasswordUser($user);
 
         if ($request->isMethod('POST') AND $form->isValid()){

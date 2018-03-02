@@ -2,9 +2,7 @@
 
 {% block body %}
     <div class="well">
-        {% for message in app.session.flashbag.get('info') %}
-            <p>Message flash : {{ message }}</p>
-        {% endfor %}
+        {% include 'include/flash_message.html.twig' %}
         <h2>Saga Admin</h2>
         {{ form(form) }}
     </div>
