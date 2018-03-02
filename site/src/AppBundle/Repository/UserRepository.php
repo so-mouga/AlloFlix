@@ -28,4 +28,15 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
         ;
         return $query;
     }
+
+    public function getIsBanished(int $note)
+    {
+        $roles = 'ROLE_USER';
+        $qb = $this->createQueryBuilder('u')
+            ->where('u.isBanished = :note')
+                ->setParameter('note', $note)
+            ->andWhere('u.roles LIKE :roles')
+                ->setParameter('roles', '%"'.$roles.'"%');
+        return $qb->getQuery()->getResult();
+    }
 }

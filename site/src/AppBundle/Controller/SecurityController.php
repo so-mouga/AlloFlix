@@ -11,6 +11,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
+use AppBundle\Manager\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
@@ -42,20 +43,16 @@ class SecurityController extends Controller
     /**
      * @Route("/create", name="create")
      */
-    public function createUserAction(Request $request)
+    public function createUserAction(Request $request, UserManager $userManager)
     {
         $user = new User();
-        $user->setRoles(['ROLE_USER']);
-        $user->setPseudo($request->request->get('appbundle_user')['pseudo']);
-        $user->setEmail($request->request->get('appbundle_user')['email']);
-        $user->setPassword($request->request->get('appbundle_user')['password']);
-
         $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
 
-        if ($request->isMethod('POST') AND  $form->handleRequest($request)->isValid()){
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
+        $userManager->encodePasswordUser($user);
+
+        if ($request->isMethod('POST') AND $form->isValid()){
+            $userManager->addUser($user);
 
             $request->getSession()->getFlashBag()
                 ->add('info', 'Votre compte a bien été créé, vous pouvez vous connectez avec vos identifiants');

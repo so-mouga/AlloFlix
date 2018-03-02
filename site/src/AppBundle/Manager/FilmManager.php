@@ -88,8 +88,7 @@ class FilmManager
      */
     public function getAllFilms(int $page,int $nbPerPage)
     {
-        if ($page < 1)
-        {
+        if ($page < 1) {
             throw $this->createNotFoundException("La page ".$page." n'existe pas.");
         }
         $listFilm = $this->em->getRepository(Film::class)
@@ -104,6 +103,22 @@ class FilmManager
         return [$listFilm, $nbPages];
     }
 
+    public function getAllFilmsByCategory(int $page,int $nbPerPage)
+    {
+        if ($page < 1) {
+            throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+        }
+        $listFilm = $this->em->getRepository(Film::class)
+            ->getAllFilm($page, $nbPerPage);
+
+        $nbPages = ceil(count($listFilm) / $nbPerPage);
+
+        if ($page > $nbPages) {
+            throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+        }
+
+        return [$listFilm, $nbPages];
+    }
     /**
      * @param int $id
      * @return Film
@@ -144,8 +159,10 @@ class FilmManager
      */
     public function getFilms()
     {
+     
         $allFilms = $this->filmRepository->findAll();
         return $allFilms;
+        
     }
 
     /**
@@ -194,12 +211,13 @@ class FilmManager
             ->findByName($name);
     }
 
+
     /**
      * @param int $note
+     * @param $films
      * @return array
      */
-    public function getFilmByRate(int $note) : array {
-        $films = $this->getAllFilms();
+    public function getFilmByRate(int $note, $films) : array {
 
         $goodRateFilm = [];
         foreach ($films as $film){
@@ -350,5 +368,47 @@ class FilmManager
 
     }
     
-    
+    public function getListFilmByCategOrNote(?Category $category, ?int $note){
+
+        if($category == null && $note == 0){
+            return $this->em->getRepository(Film::class)
+                ->findAll();
+        }
+        elseif ($category == null && $note != 0){
+
+            $films = $this->em->getRepository(Film::class)
+                ->findAll();
+            return $this->getFilmByRate($note,$films);
+        }
+        else{
+            $films = $category->getFilms();
+            if($note == 0){
+                return $films;
+            }
+            else{
+                return $this->getFilmByRate($note,$films);
+            }
+        }
+
+    /**
+     * @param $filmName
+     * @return array|null
+     */
+    public function getFilmByFirstLetter($filmName) :?array
+    {
+        if (strlen($filmName) < 3){
+            return null;
+        }
+        $query = $this->em->createQueryBuilder()
+            ->select('f')
+            ->from(Film::class, 'f')
+            ->where('f.name LIKE :name')
+            ->setParameter('name', $filmName.'%')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return $query;
+    }
 }
