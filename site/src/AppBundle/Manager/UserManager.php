@@ -79,7 +79,7 @@ class UserManager
      */
     public function getAllUsersNotBanned() :array
     {
-        return $this->entityManager->getRepository(User::class)->findByIsBanished(0);
+        return $this->entityManager->getRepository(User::class)->getIsBanished(0);
     }
 
     /**
