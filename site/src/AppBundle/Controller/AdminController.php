@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\Request;
 class AdminController extends Controller
 {
     /**
-     * @var EntityManagerInterface
+     * @var ActorManager
      */
     private $actorManager;
 
@@ -48,6 +48,9 @@ class AdminController extends Controller
      */
     private $categoryManager;
 
+    /**
+     * @var SagaManager
+     */
     private $sagaManager;
   
 

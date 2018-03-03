@@ -89,7 +89,7 @@ class UserManager
         $this->entityManager->flush();
     }
     
-    public function changePassword($user , $password)
+    public function changePassword(User$user , $password)
     {
         $newPassword = password_hash($password, PASSWORD_BCRYPT);
         $user->setPassword($newPassword);

@@ -61,6 +61,7 @@ class FilmController extends Controller
         $categories = $this->categoryManager->getAllCategories();
         $notes = $this->commentManager::NOTES;
 
+
         $data = $this->filmManager->getAllFilms($idPage, $nbPerPage);
         return $this->render('film/list_films.html.twig', [
             'listFilms'  => $data[0],
@@ -264,9 +265,10 @@ class FilmController extends Controller
         if($id_category != 0){
             $category = $this->categoryManager->getCategoryById($id_category);
         }
-        $films = $this->manager->getListFilmByCategOrNote($category,$note);
+        $films = $this->filmManager->getListFilmByCategOrNote($category,$note);
         $notes = $this->commentManager::NOTES;
         $nbPages = ceil(count($films) / $nbPerPage);
+
         return $this->render('film/list_films.html.twig', [
             'listFilms'  => $films,
             'nbPages'    => $nbPages,
@@ -274,7 +276,7 @@ class FilmController extends Controller
             'categories' => $categories,
             'notes'      => $notes,
             'category'   => $category,
-            'note'       => $note
+            'noteSearch' => $note
         ]);
     }
 }

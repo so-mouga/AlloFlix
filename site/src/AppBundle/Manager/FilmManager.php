@@ -368,27 +368,25 @@ class FilmManager
 
     }
     
-    public function getListFilmByCategOrNote(?Category $category, ?int $note){
-
-        if($category == null && $note == 0){
+    public function getListFilmByCategOrNote(?Category $category, ?int $note)
+    {
+        if ($category == null && $note == 0) {
             return $this->em->getRepository(Film::class)
                 ->findAll();
-        }
-        elseif ($category == null && $note != 0){
+        } elseif ($category == null && $note != 0) {
 
             $films = $this->em->getRepository(Film::class)
                 ->findAll();
-            return $this->getFilmByRate($note,$films);
-        }
-        else{
+            return $this->getFilmByRate($note, $films);
+        } else {
             $films = $category->getFilms();
-            if($note == 0){
+            if ($note == 0) {
                 return $films;
-            }
-            else{
-                return $this->getFilmByRate($note,$films);
+            } else {
+                return $this->getFilmByRate($note, $films);
             }
         }
+    }
 
     /**
      * @param $filmName

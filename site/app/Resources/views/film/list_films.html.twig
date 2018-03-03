@@ -10,7 +10,7 @@
                     <select name="categorie" id="categorie">
                         <option value="null">NA</option>
                         {% for categorie in categories %}
-                            <option value="{{ categorie.id }}" {% if(category is not empty and category.label == categorie.label) %} selected  {% endif %}  }} >{{ categorie.label }}</option>
+                            <option value="{{ categorie.id }}" {% if(category is defined and category is not empty and category.label == categorie.label) %} selected  {% endif %}  >{{ categorie.label }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -19,30 +19,37 @@
                     <select name="note" id="note">
                         <option value="null">NA</option>
                         {% for note in notes %}
-                            <option value="{{ note }}">{{ note }}</option>
+                            <option value="{{ note }}" {% if( noteSearch is defined and noteSearch is not empty and noteSearch == note) %} selected  {% endif %} >{{ note }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <input type="submit" class="btn-search">
+            </div>
         </form>
-        </div>
-
-        <ul class="list-films list-films-page">
-            {% for film in listFilms %}
-                {% include 'include/film_block.html.twig' %}
-            {% else %}
-                <li>Pas (encore !) de film</li>
-            {% endfor %}
-        </ul>
-        <ul class="pagination">
-            {# On utilise la fonction range(a, b) qui crée un tableau de valeurs entre a et b #}
-            {% for p in range(1, nbPages) %}
-                <li{% if p == page %} class="active"{% endif %}>
-                    <a href="{{ path('films', {'idPage': p}) }}">{{ p }}</a>
-                </li>
-            {% endfor %}
-        </ul>
     </div>
+
+    {% if  listFilms is empty and noteSearch is defined and  category is defined %}
+        <p>Pas de film avec ces conditions</p>
+    {% else %}
+        <div>
+            <ul class="list-films list-films-page">
+                {% for film in listFilms %}
+                    {% include 'include/film_block.html.twig' %}
+                {% else %}
+                    <li>Pas (encore !) de film</li>
+                {% endfor %}
+            </ul>
+            <ul class="pagination">
+                {# On utilise la fonction range(a, b) qui crée un tableau de valeurs entre a et b #}
+                {% for p in range(1, nbPages) %}
+                    <li{% if p == page %} class="active"{% endif %}>
+                        <a href="{{ path('films', {'idPage': p}) }}">{{ p }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
 
 {% endblock %}
 
