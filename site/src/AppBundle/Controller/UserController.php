@@ -52,8 +52,9 @@ class UserController extends Controller
         }
         if($formPassword->isValid())
         {
+            
             if($formPassword->get('newPassword')->getData() == $formPassword->get('confirmNewPassword')->getData() AND 
-                password_verify($userSession->getPassword() , $userPassword->getPassword()) == true)
+                password_verify($userPassword->getPassword() , $userSession->getPassword()) == true)
             {
                 $userManager->changePassword($userSession , $formPassword->get('newPassword')->getData());
             }
