@@ -1,0 +1,39 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    {% if error %}
+        <div>{{ error.messageKey }}</div>
+    {% endif %}
+    <div style="display:flex">
+        <div>
+            {{ form_start(form, {'attr': {'class': 'form-horizontal', 'action': path('create')}} )}}
+
+            <fieldset>
+                <legend>Creer votre compte </legend>
+                {{ form_widget(form.pseudo) }}
+                {{ form_widget(form.email) }}
+                {{ form_widget(form.password) }}
+                {{ form_widget(form.create) }}
+            </fieldset>
+            {{ form_rest(form) }}
+            {{ form_end(form) }}
+
+            {% for message in app.session.flashbag.get('info') %}
+                <p>Message flash : {{ message }}</p>
+            {% endfor %}
+        </div>
+        <div>
+            <form action="{{ path('login') }}" method="post" class="form-horizontal" id="form_connexion">
+                <fieldset>
+                    <legend> Connexion </legend>
+                    <input class="connexion" type="text" id="username" name="_username" required value="{{ last_username }}" placeholder="email" />
+                    <input class="connexion" type="password" id="password" required name="_password" placeholder="password"/>
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    <button class="login" type="submit">login</button>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+
+{% endblock %}

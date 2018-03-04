@@ -2,11 +2,23 @@
 # https://symfony.com/doc/current/security.html
 security:
 
-    # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    encoders:
+        AppBundle\Entity\User: bcrypt
+
+    role_hierarchy:
+        ROLE_MARKET:      [ROLE_USER]
+        ROLE_ADMIN:       [ROLE_USER, ROLE_MARKET]
+
     providers:
         in_memory:
             memory: ~
+        user:
+            entity:
+                class: AppBundle\Entity\User
+                property: email
 
+    #un firewall (ou pare-feu) cherche à vérifier
+    #que vous êtes bien celui que vous prétendez être. Ici,
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
@@ -14,11 +26,18 @@ security:
             security: false
 
         main:
+            provider: user
             anonymous: ~
-            # activate different ways to authenticate
+            form_login:
+                login_path: login
+                check_path: login
+                default_target_path: index
+                csrf_token_generator: security.csrf.token_manager
+            logout:
+                path: logout
+                target: index
 
-            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-            #http_basic: ~
-
-            # https://symfony.com/doc/current/security/form_login_setup.html
-            #form_login: ~
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: /film/, roles: ROLE_USER }
+        - { path: /preference, roles: ROLE_USER }

@@ -1,0 +1,70 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block body %}
+<div class="well">
+    {% include 'include/flash_message.html.twig' %}
+    <div class="form">
+        {{ form(form) }}
+    </div>
+</div>
+<div class="container">
+    <h1> Liste des Films </h1>
+    <table>
+    	<tr>
+			<td> Nom </td>
+			<td> Description </td>
+			<td> Action </td>
+			<td>Modifier</td>
+			<td>Supprime</td>
+    	</tr>
+    {% for film in listFilms %}
+    	<tr>
+    		<td> {{  film.name }} </td>
+    		<td> {{ film.description }}</td>
+    		<td> 
+    		{% if film.isSelected == 0 %}
+    			<a href="{{ path('isSelectedFilm', {'idFilm': film.id}) }}">
+					<button class="btn btn-success"> Ajouter à la selection </button></a>
+    		</td>
+    		{% else %}
+				<button class="btn btn-default" > Dans la selection </button></td>
+    		{% endif %}
+    		
+    		<td><a href="{{ path('admin_films_modif', {'id': film.id}) }}">
+					<button class="btn btn-info" > Modifier </button>
+				</a></td>
+    		<td><a href="{{ path('deleteFilm', {'idFilm': film.id}) }}">
+					<button class="btn btn-danger" > Supprimer </button>
+				</a></td>
+    	</tr>
+	{% endfor %}
+	
+	</table>   
+	
+	<h1> Notre selection </h1>
+	
+    <table>
+    	<tr>
+			<td> Nom </td>
+			<td> Description </td>
+			<td> Action </td>
+    	</tr>
+    {% for filmSelected in listFilmsSelected %}
+    	<tr>
+    		<td> {{  filmSelected.name }} </td>
+    		<td> {{ filmSelected.description }}</td>
+    		<td> 
+    		
+    		
+    		<a href="{{ path('notSelectedFilm', {'idFilm': filmSelected.id}) }}">
+    			<button class="btn btn-danger" > Retirer </button>
+    		</a> 
+    		
+    		</td>
+    	</tr>
+	{% endfor %}   
+	
+	</table>
+</div>
+{% endblock %}
+

@@ -1,0 +1,50 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block body %}
+    <div class="well">
+        {% include 'include/flash_message.html.twig' %}
+        <h2>Saga Admin</h2>
+        {{ form(form) }}
+    </div>
+    <div>
+        <h2>Saga Table</h2>
+
+        <table>
+            <tr>
+                <th>Label</th>
+                <th>Edit</th>
+                <th>Drop</th>
+            </tr>
+            {# faire la boucle for listSaga #}
+            {% for saga in listSaga %}
+                <tr>
+                    <td id="label_{{ saga.id }}">{{ saga.label }}</td>
+                    <td id="edit_{{ saga.id }}"><button id="{{ saga.id }}" class="btn btn-primary edit">Edit</button></td>
+                    <td id="drop_{{ saga.id }}">
+                        <form action="{{ path('delete_saga', {'id_delete': saga.id}) }}" method="post">
+                            <input type="submit" value="Drop" class="btn btn-danger">
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('delete-saga') }}">
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <p>Pas (encore !) d'saga</p>
+            {% endfor %}
+        </table>
+
+    </div>
+    <script>
+        $(document).ready(function(){
+            $(".edit").click(function(){
+                var id = $(this).attr('id');
+                var fullname = $("#label_"+id).text();
+                $('#appbundle_saga_label').val(fullname);
+                $('#appbundle_saga_id').val(id);
+            });
+        });
+        $('document').ready(function(){
+            $('#appbundle_saga_id').val(null);
+            $('#appbundle_saga_label').val('');
+        });
+    </script>
+{% endblock %}

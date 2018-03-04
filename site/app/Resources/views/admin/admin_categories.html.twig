@@ -1,0 +1,51 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block body %}
+    <div class="well">
+        {% include 'include/flash_message.html.twig' %}
+    <h2> admin categories </h2>
+        {{ form(form) }}
+    </div>
+    <div>
+        <h2>Category Table</h2>
+
+        <table>
+            <tr>
+                <th>Label</th>
+                <th>Edit</th>
+                <th>Drop</th>
+            </tr>
+            {# faire la boucle for listCategory #}
+            {% for category in listCategory %}
+                <tr>
+                    <td id="label_{{ category.id }}">{{ category.label }}</td>
+                    <td id="edit_{{ category.id }}"><button id="{{ category.id }}" class="btn btn-primary edit">Edit</button></td>
+                    <td id="drop_{{ category.id }}">
+                        <form action="{{ path('delete_category', {'id_delete': category.id}) }}" method="post">
+                            <input type="submit" value="Drop" class="btn btn-danger">
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('delete-category') }}">
+                        </form>
+
+                    </td>
+                </tr>
+            {% else %}
+                <p>Pas (encore !) de category</p>
+            {% endfor %}
+        </table>
+
+    </div>
+    <script>
+        $(document).ready(function(){
+            $(".edit").click(function(){
+                var id = $(this).attr('id');
+                var fullname = $("#label_"+id).text();
+                $('#appbundle_category_label').val(fullname);
+                $('#appbundle_category_id').val(id);
+            });
+        });
+        $('document').ready(function(){
+            $('#appbundle_category_id').val(null);
+            $('#appbundle_category_label').val('');
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if filmsHeart is not empty  %}
+        <h1> Vos favoris </h1>
+        <ul class="list-films list-films-page">
+            {% for film in filmsHeart %}
+                {% include 'include/film_block.html.twig' %}
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h1> Il y a pas de films dans vos favoris </h1>
+    {% endif %}
+{% endblock %}
+

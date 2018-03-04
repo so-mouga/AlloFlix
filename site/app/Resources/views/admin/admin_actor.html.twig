@@ -1,0 +1,70 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block body %}
+    <div class="well">
+        {% include 'include/flash_message.html.twig' %}
+        <p> admin Actor </p>
+        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+        {# Les erreurs générales du formulaire. #}
+        {{ form_errors(form) }}
+        {{ form_row(form.fullName) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.image) }}
+        {{ form_row(form.id) }}
+        {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+        {{ form_end(form) }}
+    </div>
+    <div>
+        <h2>Actor Table</h2>
+
+        <table>
+            <tr>
+                <th>Full Name</th>
+                <th>Description</th>
+                <th>image</th>
+                <th>Edit</th>
+                <th>Drop</th>
+            </tr>
+            {# faire la boucle for listActor #}
+            {% for actor in listActor %}
+            <tr>
+                <td id="fullname_{{ actor.id }}">{{ actor.fullName }}</td>
+                <td id="desc_{{ actor.id }}">{{ actor.description }}</td>
+                <td id="image_{{ actor.id }}">{{ actor.image }}</td>
+                <td id="edit_{{ actor.id }}"><button id="{{ actor.id }}" class="btn btn-primary edit">Edit</button></td>
+                <td id="drop_{{ actor.id }}">
+                    <form action="{{ path('delete_actor', {'id_delete': actor.id}) }}" method="post">
+                        <input type="submit" value="Drop" class="btn btn-danger">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('delete-actor') }}">
+                    </form>
+
+                </td>
+            </tr>
+            {% else %}
+                <p>Pas (encore !) d'actor</p>
+            {% endfor %}
+        </table>
+
+    </div>
+    <script>
+        $(document).ready(function(){
+            $(".edit").click(function(){
+                var id = $(this).attr('id');
+                var fullname = $("#fullname_"+id).text();
+                var desc = $("#desc_"+id).text();
+                var img = $("#image_"+id).text();
+                $('#appbundle_actor_fullName').val(fullname);
+                $('#appbundle_actor_description').val(desc);
+                $('#appbundle_actor_image').val(img);
+                $('#appbundle_actor_id').val(id);
+            });
+        });
+        $('document').ready(function(){
+            $('#appbundle_actor_id').val(null);
+            $('#appbundle_actor_fullName').val('');
+            $('#appbundle_actor_description').val('');
+            $('#appbundle_actor_image').val('');
+        });
+    </script>
+{% endblock %}

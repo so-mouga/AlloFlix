@@ -3,11 +3,38 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}
+            <script type="text/javascript" src="{{ "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" }}"></script>
+            <script type="text/javascript" src="{{ "http://ajax.microsoft.com/ajax/jquery.ui/1.8.10/jquery-ui.js" }}"></script>
+            <link rel="stylesheet" href="{{ asset('css/base.css') }}" />
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        <div class="top_barre">
+            {% include 'include/top_barre.html.twig' %}
+        </div>
+
+        {% if app.request.get('_route') == 'index'%}
+        <div class="title-site">
+            <h1>Bienvenue chez nous</h1>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet
+                ipsum in ex condimentum consequat non at erat. Donec imperdiet nibh mauris.
+                Praesent laoreet placerat est posuere auctor. Vivamus finibus augue ut congue
+                olutpat. Duis quis mollis nisi, et placerat ex. Vivamus a dignissim leo. Pellentesque
+            </p>
+        </div>
+        {% endif %}
+
+
+        <div class="body">
+            {% block body %}{% endblock %}
+        </div>
+        {% block javascripts %}
+            <script src="{{ asset('js/film.js') }}" type="text/javascript"></script>
+        {% endblock %}
+
     </body>
 </html>
