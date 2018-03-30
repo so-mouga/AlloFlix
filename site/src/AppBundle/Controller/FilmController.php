@@ -1,10 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kevinmouga
- * Date: 26/02/2018
- * Time: 16:07
- */
+
+declare(strict_types=1);
 
 namespace AppBundle\Controller;
 
@@ -22,7 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class FilmController extends Controller
+final class FilmController extends Controller
 {
     /**
      * @var FilmManager
@@ -61,8 +57,8 @@ class FilmController extends Controller
         $categories = $this->categoryManager->getAllCategories();
         $notes = $this->commentManager::NOTES;
 
-
         $data = $this->filmManager->getAllFilms($idPage, $nbPerPage);
+
         return $this->render('film/list_films.html.twig', [
             'listFilms'  => $data[0],
             'nbPages'    => $data[1],

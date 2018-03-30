@@ -2,6 +2,7 @@
 
 namespace AppBundle\Manager;
 
+use AppBundle\Dto\GetFilmCollectionResult;
 use AppBundle\Entity\Actor;
 use AppBundle\Entity\Category;
 use AppBundle\Entity\Comment;
@@ -9,6 +10,8 @@ use AppBundle\Entity\Film;
 use AppBundle\Entity\Producer;
 use AppBundle\Entity\Saga;
 use AppBundle\Entity\User;
+use AppBundle\Repository\FilmRepository;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -20,7 +23,7 @@ use Doctrine\ORM\EntityManagerInterface;
  * Time: 15:11
  */
 
-class FilmManager
+class FilmManager implements IPaginatedFilmCollection, IFilmCollectionByCategOrNote
 {
     private $em;
     private $filmRepository; 
@@ -84,23 +87,24 @@ class FilmManager
      *
      * @param $page
      * @param $nbPerPage
-     * @return array
+     * @return GetFilmCollectionResult|array
      */
-    public function getAllFilms(int $page,int $nbPerPage)
+    public function getAllFilms(int $page, int $nbPerPage) : GetFilmCollectionResult
     {
         if ($page < 1) {
-            throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+            throw new NotFoundHttpException(sprintf("La page %d n'existe pas.", $page));
         }
-        $listFilm = $this->em->getRepository(Film::class)
-            ->getAllFilm($page, $nbPerPage);
 
+        /* @var $filmRepository FilmRepository */
+        $filmRepository = $this->em->getRepository(Film::class);
+        $listFilm = $filmRepository->getAllFilm($page, $nbPerPage);
         $nbPages = ceil(count($listFilm) / $nbPerPage);
 
         if ($page > $nbPages) {
-            throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+            throw new NotFoundHttpException(sprintf("La page %d n'existe pas.", $page));
         }
 
-        return [$listFilm, $nbPages];
+        return new GetFilmCollectionResult($listFilm->getIterator(), $nbPages);
     }
 
     public function getAllFilmsByCategory(int $page,int $nbPerPage)
@@ -370,22 +374,24 @@ class FilmManager
     
     public function getListFilmByCategOrNote(?Category $category, ?int $note)
     {
-        if ($category == null && $note == 0) {
+        if ($category === null && $note === 0) {
             return $this->em->getRepository(Film::class)
                 ->findAll();
-        } elseif ($category == null && $note != 0) {
+        }
+
+        if ($category == null && $note != 0) {
 
             $films = $this->em->getRepository(Film::class)
                 ->findAll();
             return $this->getFilmByRate($note, $films);
-        } else {
-            $films = $category->getFilms();
-            if ($note == 0) {
-                return $films;
-            } else {
-                return $this->getFilmByRate($note, $films);
-            }
         }
+
+        $films = $category->getFilms();
+        if ($note == 0) {
+            return $films;
+        }
+
+        return $this->getFilmByRate($note, $films);
     }
 
     /**
