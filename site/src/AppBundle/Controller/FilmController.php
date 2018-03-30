@@ -46,29 +46,6 @@ final class FilmController extends Controller
     }
 
     /**
-     * @Route("/films/{idPage}", name="films", requirements={"idPage" = "\d+"})
-     *
-     * @param $idPage
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function filmsAction(int $idPage)
-    {
-        $nbPerPage = 6;
-        $categories = $this->categoryManager->getAllCategories();
-        $notes = $this->commentManager::NOTES;
-
-        $data = $this->filmManager->getAllFilms($idPage, $nbPerPage);
-
-        return $this->render('film/list_films.html.twig', [
-            'listFilms'  => $data[0],
-            'nbPages'    => $data[1],
-            'page'       => $idPage,
-            'categories' => $categories,
-            'notes'      => $notes
-        ]);
-    }
-
-    /**
      * @Route("/film/{filmID}", name="film", requirements={"filmID" = "\d+"})
      *
      * @return \Symfony\Component\HttpFoundation\Response

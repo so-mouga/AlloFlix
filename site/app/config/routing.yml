@@ -1,3 +1,8 @@
 app:
     resource: '@AppBundle/Controller/'
     type: annotation
+
+films:
+    methods: ['get']
+    path: /films/{idPage}
+    controller: AppBundle\Action\Film\PaginatedListAction
